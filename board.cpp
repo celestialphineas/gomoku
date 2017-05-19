@@ -96,7 +96,7 @@ bool Board::black_remove(unsigned x, unsigned y)
 bool Board::white_remove(unsigned x, unsigned y)
 {return general_remove(x, y, white_stone);}
 
-Board::PosStatus Board::get_status(unsigned x, unsigned y)
+Board::PosStatus Board::get_status(unsigned x, unsigned y) const
 {
     if(x == 0 || x > n_cols) return undefined;
     if(y == 0 || y > n_rows) return undefined;
@@ -112,6 +112,8 @@ Board::GameStatus Board::judge()
 
 Board::GameStatus Board::free_style_judge()
 {
+    if(n_in_row > n_rows && n_in_row > n_cols) return ongoing;
+
     // First stage: judge the rows
     for(unsigned j = 1; j <= n_rows; j++)
     {
@@ -125,7 +127,7 @@ Board::GameStatus Board::free_style_judge()
             if(in_row_black == n_in_row)    // Meet a five-in-row
             {
                 // Set the marker!
-                marker1_x = i - 3; marker1_y = j;
+                marker1_x = i + 2 - n_in_row; marker1_y = j;
                 marker2_x = i + 1; marker2_y = j;
                 // And return that the black wins!
                 return black_wins;
@@ -136,12 +138,13 @@ Board::GameStatus Board::free_style_judge()
             else in_row_white = 1;
             if(in_row_white == n_in_row)
             {
-                marker1_x = i - 3; marker1_y = j;
+                marker1_x = i + 2 - n_in_row; marker1_y = j;
                 marker2_x = i + 1; marker2_y = j;
                 return white_wins;
             }
         }
     }
+
     // Second stage: judge the columns
     for(unsigned i = 1; i <= n_cols; i++)
     {
@@ -154,7 +157,7 @@ Board::GameStatus Board::free_style_judge()
             else in_row_black = 1;
             if(in_row_black == n_in_row)
             {
-                marker1_x = i; marker1_y = j - 3;
+                marker1_x = i; marker1_y = j + 2 - n_in_row;
                 marker2_x = i; marker2_y = j + 1;
                 return black_wins;
             }
@@ -164,12 +167,308 @@ Board::GameStatus Board::free_style_judge()
             else in_row_white = 1;
             if(in_row_white == n_in_row)
             {
-                marker1_x = i; marker1_y = j - 3;
+                marker1_x = i; marker1_y = j + 2 - n_in_row;
                 marker2_x = i; marker2_y = j + 1;
                 return white_wins;
             }
         }
     }
-    // ==================== To do: Stage 3 ====================
+
+    // Third stage: i j increasing direction
+    for(unsigned i = 1; i <= n_cols - n_in_row + 1; i++)
+    {
+        unsigned in_row_black = 1, in_row_white = 1;
+        for(unsigned j = 1; j < n_rows && i + j <= n_cols; j++)
+        {
+            if(get_status(i + j - 1, j) == black_stone
+            && get_status(i + j, j + 1) == black_stone)
+                in_row_black++;
+            else in_row_black = 1;
+            if(in_row_black == n_in_row)
+            {
+                marker1_x = i + j + 1 - n_in_row; marker1_y = j + 2 - n_in_row;
+                marker2_x = i + j; marker2_y = j + 1;
+                return black_wins;
+            }
+            if(get_status(i + j - 1, j) == white_stone
+            && get_status(i + j, j + 1) == white_stone)
+                in_row_white++;
+            else in_row_white = 1;
+            if(in_row_white == n_in_row)
+            {
+                marker1_x = i + j + 1 - n_in_row; marker1_y = j + 2 - n_in_row;
+                marker2_x = i + j; marker2_y = j + 1;
+                return white_wins;
+            }
+        }
+    }
+    for(unsigned j = 1; j <= n_rows - n_in_row + 1; j++)
+    {
+        unsigned in_row_black = 1, in_row_white = 1;
+        for(unsigned i = 1; i < n_cols && i + j <= n_rows; i++)
+        {
+            if(get_status(i, j + i - 1) == black_stone
+            && get_status(i + 1, j + i) == black_stone)
+                in_row_black++;
+            else in_row_black = 1;
+            if(in_row_black == n_in_row)
+            {
+                marker1_x = i + 2 - n_in_row; marker1_y = i + j + 1 - n_in_row;
+                marker2_x = i + 1; marker2_y = i + j;
+                return black_wins;
+            }
+            if(get_status(i, j + i - 1) == white_stone
+            && get_status(i + 1, j + i) == white_stone)
+                in_row_white++;
+            else in_row_white = 1;
+            if(in_row_white == n_in_row)
+            {
+                marker1_x = i + 2 - n_in_row; marker1_y = i + j + 1 - n_in_row;
+                marker2_x = i + 1; marker2_y = i + j;
+                return white_wins;
+            }
+        }
+    }
+
+    // Fourth stage: i increasing j decreasing direction
+    for(unsigned i = n_in_row; i <= n_cols; i++)
+    {
+        unsigned in_row_black = 1, in_row_white = 1;
+        for(unsigned j = 1; j < n_rows && i - j <= n_cols; j++)
+        {
+            if(get_status(i - j + 1, j) == black_stone
+            && get_status(i - j, j + 1) == black_stone)
+                in_row_black++;
+            else in_row_black = 1;
+            if(in_row_black == n_in_row)
+            {
+                marker1_x = i - j + n_in_row - 1; marker1_y = j + 2 - n_in_row;
+                marker2_x = i - j; marker2_y = j + 1;
+                return black_wins;
+            }
+            if(get_status(i - j + 1, j) == white_stone
+            && get_status(i - j, j + 1) == white_stone)
+                in_row_white++;
+            else in_row_white = 1;
+            if(in_row_white == n_in_row)
+            {
+                marker1_x = i - j + n_in_row - 1; marker1_y = j + 2 - n_in_row;
+                marker2_x = i - j; marker2_y = j + 1;
+                return white_wins;
+            }
+        }
+    }
+    for(unsigned j = 1; j <= n_rows - n_in_row + 1; j++)
+    {
+        unsigned in_row_black = 1, in_row_white = 1;
+        for(unsigned i = n_cols; i > 1 && j + n_cols - i + 1 <= n_rows; i--)
+        {
+            if(get_status(i, j + n_cols - i) == black_stone
+            && get_status(i - 1, j + n_cols - i + 1) == black_stone)
+                in_row_black++;
+            else in_row_black = 1;
+            if(in_row_black == n_in_row)
+            {
+                marker1_x = i - 1; marker1_y = j + n_cols - i + 1;
+                marker2_x = i - 2 + n_in_row;
+                marker2_y = j + n_cols - i + 2 - n_in_row;
+                return black_wins;
+            }
+            if(get_status(i, j + n_cols - i) == white_stone
+            && get_status(i - 1, j + n_cols - i + 1) == white_stone)
+                in_row_white++;
+            else in_row_white = 1;
+            if(in_row_white == n_in_row)
+            {
+                marker1_x = i - 1; marker1_y = j + n_cols - i + 1;
+                marker2_x = i - 2 + n_in_row;
+                marker2_y = j + n_cols - i + 2 - n_in_row;
+                return white_wins;
+            }
+        }
+    }
+
+    return ongoing;
+}
+
+// ==================== To do: to be modified ============================
+Board::GameStatus Board::standard_judge()
+{
+    if(n_in_row > n_rows && n_in_row > n_cols) return ongoing;
+
+    // First stage: judge the rows
+    for(unsigned j = 1; j <= n_rows; j++)
+    {
+        unsigned in_row_black = 1, in_row_white = 1;
+        for(unsigned i = 1; i < n_cols; i++)
+        {
+            if(get_status(i, j) == black_stone
+            && get_status(i + 1, j) == black_stone)
+                in_row_black++;
+            else in_row_black = 1;
+            if(in_row_black == n_in_row)    // Meet a five-in-row
+            {
+                // Set the marker!
+                marker1_x = i + 2 - n_in_row; marker1_y = j;
+                marker2_x = i + 1; marker2_y = j;
+                // And return that the black wins!
+                return black_wins;
+            }
+            if(get_status(i, j) == white_stone
+            && get_status(i + 1, j) == white_stone)
+                in_row_white++;
+            else in_row_white = 1;
+            if(in_row_white == n_in_row)
+            {
+                marker1_x = i + 2 - n_in_row; marker1_y = j;
+                marker2_x = i + 1; marker2_y = j;
+                return white_wins;
+            }
+        }
+    }
+
+    // Second stage: judge the columns
+    for(unsigned i = 1; i <= n_cols; i++)
+    {
+        unsigned in_row_black = 1, in_row_white = 1;
+        for(unsigned j = 1; j < n_rows; j++)
+        {
+            if(get_status(i, j) == black_stone
+            && get_status(i, j + 1) == black_stone)
+                in_row_black++;
+            else in_row_black = 1;
+            if(in_row_black == n_in_row)
+            {
+                marker1_x = i; marker1_y = j + 2 - n_in_row;
+                marker2_x = i; marker2_y = j + 1;
+                return black_wins;
+            }
+            if(get_status(i, j) == white_stone
+            && get_status(i, j + 1) == white_stone)
+                in_row_white++;
+            else in_row_white = 1;
+            if(in_row_white == n_in_row)
+            {
+                marker1_x = i; marker1_y = j + 2 - n_in_row;
+                marker2_x = i; marker2_y = j + 1;
+                return white_wins;
+            }
+        }
+    }
+
+    // Third stage: i j increasing direction
+    for(unsigned i = 1; i <= n_cols - n_in_row + 1; i++)
+    {
+        unsigned in_row_black = 1, in_row_white = 1;
+        for(unsigned j = 1; j < n_rows && i + j <= n_cols; j++)
+        {
+            if(get_status(i + j - 1, j) == black_stone
+            && get_status(i + j, j + 1) == black_stone)
+                in_row_black++;
+            else in_row_black = 1;
+            if(in_row_black == n_in_row)
+            {
+                marker1_x = i + j + 1 - n_in_row; marker1_y = j + 2 - n_in_row;
+                marker2_x = i + j; marker2_y = j + 1;
+                return black_wins;
+            }
+            if(get_status(i + j - 1, j) == white_stone
+            && get_status(i + j, j + 1) == white_stone)
+                in_row_white++;
+            else in_row_white = 1;
+            if(in_row_white == n_in_row)
+            {
+                marker1_x = i + j + 1 - n_in_row; marker1_y = j + 2 - n_in_row;
+                marker2_x = i + j; marker2_y = j + 1;
+                return white_wins;
+            }
+        }
+    }
+    for(unsigned j = 1; j <= n_rows - n_in_row + 1; j++)
+    {
+        unsigned in_row_black = 1, in_row_white = 1;
+        for(unsigned i = 1; i < n_cols && i + j <= n_rows; i++)
+        {
+            if(get_status(i, j + i - 1) == black_stone
+            && get_status(i + 1, j + i) == black_stone)
+                in_row_black++;
+            else in_row_black = 1;
+            if(in_row_black == n_in_row)
+            {
+                marker1_x = i + 2 - n_in_row; marker1_y = i + j + 1 - n_in_row;
+                marker2_x = i + 1; marker2_y = i + j;
+                return black_wins;
+            }
+            if(get_status(i, j + i - 1) == white_stone
+            && get_status(i + 1, j + i) == white_stone)
+                in_row_white++;
+            else in_row_white = 1;
+            if(in_row_white == n_in_row)
+            {
+                marker1_x = i + 2 - n_in_row; marker1_y = i + j + 1 - n_in_row;
+                marker2_x = i + 1; marker2_y = i + j;
+                return white_wins;
+            }
+        }
+    }
+
+    // Fourth stage: i increasing j decreasing direction
+    for(unsigned i = n_in_row; i <= n_cols; i++)
+    {
+        unsigned in_row_black = 1, in_row_white = 1;
+        for(unsigned j = 1; j < n_rows && i - j <= n_cols; j++)
+        {
+            if(get_status(i - j + 1, j) == black_stone
+            && get_status(i - j, j + 1) == black_stone)
+                in_row_black++;
+            else in_row_black = 1;
+            if(in_row_black == n_in_row)
+            {
+                marker1_x = i - j + n_in_row - 1; marker1_y = j + 2 - n_in_row;
+                marker2_x = i - j; marker2_y = j + 1;
+                return black_wins;
+            }
+            if(get_status(i - j + 1, j) == white_stone
+            && get_status(i - j, j + 1) == white_stone)
+                in_row_white++;
+            else in_row_white = 1;
+            if(in_row_white == n_in_row)
+            {
+                marker1_x = i - j + n_in_row - 1; marker1_y = j + 2 - n_in_row;
+                marker2_x = i - j; marker2_y = j + 1;
+                return white_wins;
+            }
+        }
+    }
+    for(unsigned j = 1; j <= n_rows - n_in_row + 1; j++)
+    {
+        unsigned in_row_black = 1, in_row_white = 1;
+        for(unsigned i = n_cols; i > 1 && j + n_cols - i + 1 <= n_rows; i--)
+        {
+            if(get_status(i, j + n_cols - i) == black_stone
+            && get_status(i - 1, j + n_cols - i + 1) == black_stone)
+                in_row_black++;
+            else in_row_black = 1;
+            if(in_row_black == n_in_row)
+            {
+                marker1_x = i - 1; marker1_y = j + n_cols - i + 1;
+                marker2_x = i - 2 + n_in_row;
+                marker2_y = j + n_cols - i + 2 - n_in_row;
+                return black_wins;
+            }
+            if(get_status(i, j + n_cols - i) == white_stone
+            && get_status(i - 1, j + n_cols - i + 1) == white_stone)
+                in_row_white++;
+            else in_row_white = 1;
+            if(in_row_white == n_in_row)
+            {
+                marker1_x = i - 1; marker1_y = j + n_cols - i + 1;
+                marker2_x = i - 2 + n_in_row;
+                marker2_y = j + n_cols - i + 2 - n_in_row;
+                return white_wins;
+            }
+        }
+    }
+
     return ongoing;
 }

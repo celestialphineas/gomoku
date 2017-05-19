@@ -43,15 +43,15 @@ public:
     bool white_remove(unsigned x, unsigned y);
     // Interface for reading private properties
     // Get the number of rows or columns
-    unsigned n_row() {return n_rows;}
-    unsigned n_col() {return n_cols;}
+    unsigned n_row() const {return n_rows;}
+    unsigned n_col() const {return n_cols;}
     // Get the status of a position: accessible/black occupied/white occupied
-    unsigned get_status(unsigned x, unsigned y);
+    unsigned get_status(unsigned x, unsigned y) const;
     // Get the marker coodinates (see private scope below)
-    unsigned get_marker1_x() {return marker1_x;}
-    unsigned get_marker1_y() {return marker1_y;}
-    unsigned get_marker2_x() {return marker2_x;}
-    unsigned get_marker2_y() {return marker2_y;}
+    unsigned get_marker1_x() const {return marker1_x;}
+    unsigned get_marker1_y() const {return marker1_y;}
+    unsigned get_marker2_x() const {return marker2_x;}
+    unsigned get_marker2_y() const {return marker2_y;}
     // This function is used to judge who wins the game or if the game is 
     // ongoing.
     GameStatus judge();
@@ -80,8 +80,12 @@ private:
     unsigned marker1_y;
     unsigned marker2_x;
     unsigned marker2_y;
-    // Free style (renju == false, exact_five == false)
+    
+    // Free style (renju == false && exact_five == false)
     GameStatus free_style_judge();
+    // Standard gomoku (renju == false && exact_five == true)
+    GameStatus standard_judge();
+    
     // Just consider the generalized condition...
     // It can be useful to let it independent from the judge algorithm.
     unsigned n_in_row;
