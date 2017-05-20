@@ -41,7 +41,13 @@ public:
     unsigned n_col() const {return n_cols;}
     // Get the status of a position: accessible/black occupied/white occupied
     unsigned get_status(unsigned x, unsigned y) const;
-    // ===== To do: the undo method. =====
+    // Get an instance of the latest te
+    Te last_te() const {return game_sequence.back();}
+    // Get an instance of the entire game process
+    std::deque<Te> get_game_sequence() const
+        {return *(new std::deque<Te>(game_sequence));}
+    // Undo, return true for succeed
+    bool undo();
 private:
     unsigned n_rows;                // Number of rows in the game
     unsigned n_cols;                // Number of columns in the game

@@ -34,6 +34,7 @@ public:
     virtual GameStatus judge() = 0;
 };
 
+// Free style gomoku is an easy form of gomoku requires no exact-five rule
 class FreeStyleJudge: public WinningJudge
 {
 public:

@@ -85,3 +85,35 @@ Board::PosStatus Board::get_status(unsigned x, unsigned y) const
     if(y == 0 || y > n_rows) return undefined;
     return board_data[x + y*n_cols];
 }
+
+bool Board::undo()
+{
+    if(game_sequence.empty()) return false;
+    if(game_sequence.back().is_te())
+    {
+        if(game_sequence.back().id() == max_id)
+            max_id--;
+        game_sequence.pop_back();
+        return true;
+    }
+    else
+    {
+        unsigned removed_x = game_sequence.back().x();
+        unsigned removed_y = game_sequence.back().y();
+        game_sequence.pop_back();
+        for(std::deque<Te>::iterator i = game_sequence.end();
+            i != game_sequence.begin(); i--)
+        {
+            if(i->x() == removed_x && i->y() == removed_y)
+            {
+                unsigned local_max_id = 0;
+                for(std::deque<Te>::iterator j = game_sequence.begin();
+                    j != i; j++)
+                        if(j->id() > local_max_id) local_max_id = j->id();
+                i->set_id(++local_max_id);
+                return true;
+            }
+        }
+        return false;
+    }
+}
