@@ -1,13 +1,5 @@
 #include "winning_judge.h"
 
-WinningJudge::WinningJudge(Board *_board)
-{
-    board = _board;
-    marker1_x = undef; marker1_y = undef;
-    marker2_x = undef; marker2_y = undef;
-    n_in_row = 5;
-}
-
 // Codes below are rather dirty (all private). Are you sure to continue?
 // Help your self fold these scopes!
 FreeStyleJudge::GameStatus FreeStyleJudge::judge()

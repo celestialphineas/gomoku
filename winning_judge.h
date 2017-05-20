@@ -23,9 +23,15 @@ public:
     static const GameStatus ongoing = 0;
     static const GameStatus black_wins = 1;
     static const GameStatus white_wins = 2;
-    WinningJudge(Board *_board);
+    WinningJudge(Board *_board)
+    {
+        board = _board;
+        marker1_x = undef; marker1_y = undef;
+        marker2_x = undef; marker2_y = undef;
+        n_in_row = 5;
+        return;
+    }
     WinningJudge(const WinningJudge &src) {this->board = src.board;}
-    ~WinningJudge() {return;}
     // Get the marker coodinates (see private scope below)
     unsigned get_marker1_x() const {return marker1_x;}
     unsigned get_marker1_y() const {return marker1_y;}
@@ -38,6 +44,8 @@ public:
 class FreeStyleJudge: public WinningJudge
 {
 public:
+    FreeStyleJudge(Board *_board): WinningJudge(_board) {};
+    FreeStyleJudge(const WinningJudge &src): WinningJudge(src) {};
     GameStatus judge();
 };
 
