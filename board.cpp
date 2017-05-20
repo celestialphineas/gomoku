@@ -91,26 +91,31 @@ bool Board::undo()
     if(game_sequence.empty()) return false;
     if(game_sequence.back().is_te())
     {
+        unsigned undo_x = game_sequence.back().x();
+        unsigned undo_y = game_sequence.back().y();
         if(game_sequence.back().id() == max_id)
             max_id--;
+        board_data[undo_x + undo_y*n_cols] = accessible;
         game_sequence.pop_back();
         return true;
     }
     else
     {
-        unsigned removed_x = game_sequence.back().x();
-        unsigned removed_y = game_sequence.back().y();
+        unsigned undo_x = game_sequence.back().x();
+        unsigned undo_y = game_sequence.back().y();
         game_sequence.pop_back();
         for(std::deque<Te>::iterator i = game_sequence.end();
             i != game_sequence.begin(); i--)
         {
-            if(i->x() == removed_x && i->y() == removed_y)
+            if(i->x() == undo_x && i->y() == undo_y)
             {
                 unsigned local_max_id = 0;
                 for(std::deque<Te>::iterator j = game_sequence.begin();
                     j != i; j++)
                         if(j->id() > local_max_id) local_max_id = j->id();
                 i->set_id(++local_max_id);
+                board_data[undo_x + undo_y*n_cols]
+                    = i->is_black() ? black_stone : white_stone;
                 return true;
             }
         }
