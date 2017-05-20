@@ -32,6 +32,7 @@ public:
         return;
     }
     WinningJudge(const WinningJudge &src) {this->board = src.board;}
+    virtual ~WinningJudge() {return;}
     // Get the marker coodinates (see private scope below)
     unsigned get_marker1_x() const {return marker1_x;}
     unsigned get_marker1_y() const {return marker1_y;}
@@ -46,6 +47,7 @@ class FreeStyleJudge: public WinningJudge
 public:
     FreeStyleJudge(Board *_board): WinningJudge(_board) {};
     FreeStyleJudge(const WinningJudge &src): WinningJudge(src) {};
+    ~FreeStyleJudge() {};
     GameStatus judge();
 };
 
