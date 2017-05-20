@@ -55,6 +55,7 @@ private:
     // crispy.
     bool general_te(unsigned x, unsigned y, unsigned stone);
     bool general_remove(unsigned x, unsigned y, unsigned stone);
+    unsigned max_id;
 };
 
 #endif

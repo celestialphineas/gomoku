@@ -5,7 +5,7 @@
 Board::Board(unsigned _n_rows, unsigned _n_cols)
 {
     // Initialize the board data.
-    n_rows = _n_rows; n_cols = _n_cols;
+    n_rows = _n_rows; n_cols = _n_cols; max_id = 0;
     board_data = new unsigned[(_n_rows + 1) * (_n_cols + 1)];
     for(unsigned i = 0; i < (n_rows+1)*(n_cols+1); i++)
         board_data[i] = accessible;
@@ -22,6 +22,7 @@ Board::Board(const Board &src)
 {
     n_rows = src.n_rows;
     n_cols = src.n_cols;
+    max_id = src.max_id;
     board_data = new unsigned[(n_rows + 1) * (n_cols + 1)];
     for(unsigned i = 0; i < (n_rows+1)*(n_cols+1); i++)
         board_data[i] = src.board_data[i];
@@ -34,18 +35,9 @@ bool Board::general_te(unsigned x, unsigned y, PosStatus stone)
     if(x == 0 || x > n_cols) return false;
     if(y == 0 || y > n_rows) return false;
     if(get_status(x, y) != accessible) return false;
-    unsigned new_stone_id = 0;
-    // Find the max te id in the deque
-    if(!game_sequence.empty())
-    {
-        for(std::deque<Te>::iterator i = game_sequence.begin();
-            i != game_sequence.end(); i++)
-                if(i->id() > new_stone_id) new_stone_id = i->id();
-    }
-    new_stone_id++;
     // Construct a new te object
     Te new_te(x, y, stone == black_stone ? Te::black : Te::white,
-        new_stone_id, Te::te);
+        ++max_id, Te::te);
     // Move on the board
     board_data[x + y*n_cols] = stone;
     // Push in the game sequence stack
@@ -67,6 +59,10 @@ bool Board::general_remove(unsigned x, unsigned y, PosStatus stone)
             break;
         }
     }
+    max_id = 0;
+    for(std::deque<Te>::iterator i = game_sequence.begin();
+        i != game_sequence.end(); i++)
+            if(i->id() > max_id) max_id = i->id();
     Te new_te(x, y, stone == black_stone ? Te::black : Te::white,
         0, Te::remove);
     board_data[x + y*n_cols] = accessible;
