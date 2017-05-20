@@ -34,11 +34,12 @@ public:
     bool is_black() {return !stone_color;}
     unsigned x() {return coord_x;}
     unsigned y() {return coord_y;}
-    unsigned id() {return te_id;}
+    unsigned id() {return stone_id;}
+    unsigned set_id(unsigned _stone_id) {return stone_id = _stone_id;}
 private:
     bool te_status;     // Either a te or a remove
     bool stone_color;   // The PLAYER's stone color
-    unsigned te_id;     // Id of the te
+    unsigned stone_id;  // Id of the stone, 0 for a remove or an invalid te
     unsigned coord_x;   // The x coordinate of the te
     unsigned coord_y;   // The y coordinate of the te
 };
