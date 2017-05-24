@@ -3,7 +3,7 @@
 
 #include "board.h"
 
-// Judege base class
+// Judge base class
 class WinningJudge
 {
 protected:
@@ -48,6 +48,15 @@ public:
     FreeStyleJudge(Board *_board): WinningJudge(_board) {};
     FreeStyleJudge(const WinningJudge &src): WinningJudge(src) {};
     ~FreeStyleJudge() {};
+    GameStatus judge();
+};
+
+class StandardGomokuJudge: public WinningJudge
+{
+public:
+    StandardGomokuJudge(Board *_board): WinningJudge(_board) {};
+    StandardGomokuJudge(const WinningJudge &src): WinningJudge(src) {};
+    ~StandardGomokuJudge() {};
     GameStatus judge();
 };
 

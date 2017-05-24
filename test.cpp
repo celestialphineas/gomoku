@@ -21,7 +21,7 @@ void print_board(const Board& board)
 int main(void)
 {
     Board *board = new Board;
-    WinningJudge *judge = new FreeStyleJudge(board);
+    WinningJudge *judge = new StandardGomokuJudge(board);
 
     while(1)
     {
@@ -79,7 +79,7 @@ int main(void)
             case 'c':
                 std::cin >> x >> y;
                 delete board; board = new Board(x, y);
-                delete judge; judge = new FreeStyleJudge(board);
+                delete judge; judge = new StandardGomokuJudge(board);
                 break;
             case 'q':
                 return 0;
