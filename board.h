@@ -39,6 +39,8 @@ public:
     // Get the number of rows or columns
     unsigned n_row() const {return n_rows;}
     unsigned n_col() const {return n_cols;}
+    // If the board is empty
+    bool empty() const {return game_sequence.empty();}
     // Get the status of a position: accessible/black occupied/white occupied
     unsigned get_status(unsigned x, unsigned y) const;
     // Get an instance of the latest te
