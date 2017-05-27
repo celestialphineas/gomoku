@@ -41,23 +41,4 @@ public:
     virtual GameStatus judge() = 0;
 };
 
-// Free style gomoku is an easy form of gomoku requires no exact-five rule
-class FreeStyleJudge: public WinningJudge
-{
-public:
-    FreeStyleJudge(Board *_board): WinningJudge(_board) {};
-    FreeStyleJudge(const WinningJudge &src): WinningJudge(src) {};
-    ~FreeStyleJudge() {};
-    GameStatus judge();
-};
-
-class StandardGomokuJudge: public WinningJudge
-{
-public:
-    StandardGomokuJudge(Board *_board): WinningJudge(_board) {};
-    StandardGomokuJudge(const WinningJudge &src): WinningJudge(src) {};
-    ~StandardGomokuJudge() {};
-    GameStatus judge();
-};
-
 #endif

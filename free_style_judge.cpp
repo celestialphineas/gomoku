@@ -1,4 +1,4 @@
-#include "winning_judge.h"
+#include "free_style_judge.h"
 
 FreeStyleJudge::GameStatus FreeStyleJudge::judge()
 {

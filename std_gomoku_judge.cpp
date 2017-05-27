@@ -1,4 +1,4 @@
-#include "winning_judge.h"
+#include "std_gomoku_judge.h"
 
 StandardGomokuJudge::GameStatus StandardGomokuJudge::judge()
 {

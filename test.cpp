@@ -1,6 +1,6 @@
 #include <iostream>
 #include "board.h"
-#include "winning_judge.h"
+#include "std_gomoku_judge.h"
 
 void print_board(const Board& board)
 {
