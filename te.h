@@ -28,13 +28,13 @@ public:
     // Copy constructor
     Te(const Te &src);
     // 
-    bool is_te() {return te_status;}
-    bool is_remove() {return !te_status;}
-    bool is_white() {return stone_color;}
-    bool is_black() {return !stone_color;}
-    unsigned x() {return coord_x;}
-    unsigned y() {return coord_y;}
-    unsigned id() {return stone_id;}
+    bool is_te() const {return te_status;}
+    bool is_remove() const {return !te_status;}
+    bool is_white() const {return stone_color;}
+    bool is_black() const {return !stone_color;}
+    unsigned x() const {return coord_x;}
+    unsigned y() const {return coord_y;}
+    unsigned id() const {return stone_id;}
     unsigned set_id(unsigned _stone_id) {return stone_id = _stone_id;}
 private:
     bool te_status;     // Either a te or a remove
