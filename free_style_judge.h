@@ -11,6 +11,7 @@ public:
     FreeStyleJudge(const WinningJudge &src): WinningJudge(src) {};
     ~FreeStyleJudge() {};
     GameStatus judge();
+    WinningJudge *clone() const {return new FreeStyleJudge(*this);}
 };
 
 #endif

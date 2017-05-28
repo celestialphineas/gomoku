@@ -9,6 +9,7 @@ public:
     StandardGomokuJudge(const WinningJudge &src): WinningJudge(src) {};
     ~StandardGomokuJudge() {};
     GameStatus judge();
+    WinningJudge *clone() const {return new StandardGomokuJudge(*this);}
 };
 
 #endif

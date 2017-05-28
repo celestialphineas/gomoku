@@ -33,6 +33,8 @@ public:
     }
     WinningJudge(const WinningJudge &src) {this->board = src.board;}
     virtual ~WinningJudge() {return;}
+    // We need a clone method to request an instance with a base class pointer.
+    virtual WinningJudge *clone() const = 0;
     // Get the marker coodinates (see private scope below)
     unsigned get_marker1_x() const {return marker1_x;}
     unsigned get_marker1_y() const {return marker1_y;}

@@ -4,13 +4,26 @@
 
 #include "board.h"
 #include "player.h"
-#include "winning_judge.h"
+#include "free_style_judge.h"
 
+// Game abstract interface
 class Game
 {
 public:
-    Game();
+    Game()
+    {board = NULL;   judge = NULL;
+        black_player = white_player = NULL;}
+    Game(const Game&);
+    virtual ~Game();
+    void exchange_player();
+    void set_board(const Board*);
+    void set_judge(const WinningJudge*);
+    void set_black(const Player*);
+    void set_white(const Player*);
+    virtual void request_te() = 0;
 protected:
+    Board *board;
+    WinningJudge *judge;
     Player *black_player;
     Player *white_player;
 };

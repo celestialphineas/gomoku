@@ -22,7 +22,9 @@ public:
     Player(Board *_board, bool _stone) {board = _board; stone_color = _stone;}
     Player(const Player &src)
         {board = src.board; stone_color = src.stone_color;}
-    ~Player() {return;}
+    virtual ~Player() {return;}
+    // We need a clone method to request an instance with a base class pointer.
+    virtual Player *clone() const = 0;
     bool is_black() const {return !stone_color;}
     bool is_white() const {return stone_color;}
     void set_board(Board *_board) {board = _board;}
@@ -41,6 +43,7 @@ public:
         : Player(_board, _stone) {judge = _judge;}
     AIPlayer(const AIPlayer &src): Player(src) {judge = src.judge;}
     ~AIPlayer() {return;}
+    // virtual Player *clone() const;
     void set_judge(WinningJudge *_judge) {judge = _judge;}
 protected:
     WinningJudge *judge;
