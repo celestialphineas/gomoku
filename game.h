@@ -22,6 +22,8 @@ public:
     void set_white(const Player*);
     virtual void request_te() = 0;
 protected:
+    // A game instance has its own components!
+    // The pointers below each point to an unique instance.
     Board *board;
     WinningJudge *judge;
     Player *black_player;
