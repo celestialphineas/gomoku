@@ -1,6 +1,6 @@
 #include "std_organizer.h"
 
-void StdOrganizer::request_te()
+bool StdOrganizer::request_te()
 {
     if(request_black)
     {

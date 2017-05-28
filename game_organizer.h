@@ -23,6 +23,7 @@ public:
     void set_black(Player*);
     void set_white(Player*);
     virtual bool request_te() = 0;
+    friend class SingleGameFactory;
 protected:
     // A game instance has its own components!
     // The pointers below each point to an unique instance.
