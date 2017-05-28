@@ -32,6 +32,11 @@ void Game::set_board(const Board *src)
 {
     if(board) delete board;
     board = new Board(*src);
+    // Notify the judge
+    if(judge) judge->set_board(board);
+    // Notify the players
+    if(black_player) black_player->set_board(board);
+    if(white_player) white_player->set_board(board);
     return;
 }
 
@@ -39,6 +44,13 @@ void Game::set_judge(const WinningJudge *src)
 {
     if(judge) delete judge;
     judge = src->clone();
+    if(board) judge->set_board(board);
+    // Notify the players that the judge has changed.
+    AIPlayer *aiplayer = NULL;
+    if((aiplayer = dynamic_cast<AIPlayer*>(black_player)))
+        aiplayer->set_judge(judge);
+    if((aiplayer = dynamic_cast<AIPlayer*>(white_player)))
+        aiplayer->set_judge(judge);
     return;
 }
 
@@ -47,6 +59,10 @@ void Game::set_black(const Player *src)
     if(black_player) delete black_player;
     black_player = src->clone();
     black_player->set_stone(Player::black);
+    if(board) black_player->set_board(board);
+    AIPlayer *aiplayer = NULL;
+    if((aiplayer = dynamic_cast<AIPlayer*>(black_player)))
+        if(judge) aiplayer->set_judge(judge);
     return;
 }
 
@@ -55,6 +71,10 @@ void Game::set_white(const Player *src)
     if(white_player) delete white_player;
     white_player = src->clone();
     white_player->set_stone(Player::white);
+    if(board) white_player->set_board(board);
+    AIPlayer *aiplayer = NULL;
+    if((aiplayer = dynamic_cast<AIPlayer*>(white_player)))
+        if(judge) aiplayer->set_judge(judge);
     return;
 }
 
