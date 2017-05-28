@@ -29,8 +29,8 @@ public:
     bool is_white() const {return stone_color;}
     void set_board(Board *_board) {board = _board;}
     void set_stone(bool _stone) {stone_color = _stone;}
-    virtual void te() = 0;
-    virtual void remove(const std::vector<Te> te_candidates);
+    virtual bool te() = 0;
+    virtual bool remove(const std::vector<Te> te_candidates);
 protected:
     Board *board;
     bool stone_color;

@@ -122,3 +122,14 @@ bool Board::undo()
         return false;
     }
 }
+
+bool Board::empty() const
+{
+    if(game_sequence.empty()) return true;
+    for(unsigned i = 1; i <= n_rows; i++)
+    for(unsigned j = 1; j <= n_cols; j++)
+    {
+        if(get_status(i, j) != accessible) return false;
+    }
+    return true;
+}

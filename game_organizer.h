@@ -1,4 +1,4 @@
-// Game class interface
+// Header file for Game class interface
 #ifndef __GAME_ORGANIZER_H_
 #define __GAME_ORGANIZER_H_
 
@@ -22,7 +22,7 @@ public:
     void set_judge(WinningJudge *_judge) {judge = _judge;}
     void set_black(Player*);
     void set_white(Player*);
-    virtual void request_te() = 0;
+    virtual bool request_te() = 0;
 protected:
     // A game instance has its own components!
     // The pointers below each point to an unique instance.
