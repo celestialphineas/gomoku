@@ -16,7 +16,6 @@ void print_board(const Board& board)
         }
         std::cout << "  " << j << std::endl;
     }
-    std::cout << std::endl;
     return;
 }
 
@@ -38,6 +37,7 @@ void print_threats(const std::vector<Threat> &src)
             {
                 std::cout << (*j)[0] << " " << (*j)[1] << "  ";
             }
+            std::cout << std::endl;
         }
     }
     return;
