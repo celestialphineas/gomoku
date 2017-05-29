@@ -136,6 +136,79 @@ std::vector<Threat> &ThreatFinder::find_straight(bool who, unsigned n_to_check) 
         }
     }
 
-    // Todo: fourth stage
+    // Fourth stage: No use to comment! QAQ ... kuku... No one else except me
+    // would be here to see my comments! No one will notice!!
+    for(int i = board->n_col(); i > int(n_to_check); i--)
+    // Diagonals from (i, 1)
+    {
+        int k = 0; // k is the decrement
+        while(k < int(board->n_row()) - int(n_to_check))
+        {
+            if(board->get_status(i - k, 1 + k)
+                != Board::accessible)
+                    {k++; continue;}
+            for(unsigned m = 1; m <= n_to_check; m++)
+            {
+                if(board->get_status(i - k - m, 1 + k + m)
+                    != (who ? Board::white_stone : Board::black_stone))
+                        goto next_loop5;
+            }
+            if(board->get_status(i - k - n_to_check - 1,
+                k + n_to_check + 2) == Board::accessible) // A threat spotted
+            {
+                Threat threat;
+                threat.threat_src = who;
+                threat.pos1_x = i - k - n_to_check;
+                threat.pos1_y = 1 + k + n_to_check;
+                threat.pos2_x = i - k - 1;
+                threat.pos2_y = 2 + k;
+                std::vector<unsigned> coord;
+                coord.push_back(i - k - n_to_check - 1);
+                coord.push_back(k + n_to_check + 2);
+                threat.key_pos_list.push_back(coord);
+                coord[0] = i - k; coord[1] = 1 + k;
+                threat.key_pos_list.push_back(coord);
+                result->push_back(threat);
+            }
+            next_loop5: k++;
+        }
+    }
+    for(int j = 2; j < int(board->n_row()) - int(n_to_check); j++)
+    // Diagonals from (n_cols, j)
+    {
+        int k = 0; // k is the decrement
+        while(board->n_col() - k >= n_to_check + 2
+            && j + k <= int(board->n_col()) - int(n_to_check) - 1)
+        {
+            if(board->get_status(board->n_col() - k, j + k)
+                != Board::accessible)
+                    {k++; continue;}
+            for(unsigned m = 1; m <= n_to_check; m++)
+            {
+                if(board->get_status(board->n_col() - k - m, j + k + m)
+                    != (who ? Board::white_stone : Board::black_stone))
+                        goto next_loop6;
+            }
+            if(board->get_status(board->n_col() - k - n_to_check - 1,
+                j + k + n_to_check + 1) == Board::accessible)
+                    // A threat spotted
+            {
+                Threat threat;
+                threat.threat_src = who;
+                threat.pos1_x = board->n_col() - k - n_to_check;
+                threat.pos1_y = j + k + n_to_check;
+                threat.pos2_x = board->n_col() - k - 1;
+                threat.pos2_y = j + k + 1;
+                std::vector<unsigned> coord;
+                coord.push_back(board->n_col() - k - n_to_check - 1);
+                coord.push_back(j + k + n_to_check + 1);
+                threat.key_pos_list.push_back(coord);
+                coord[0] = board->n_col() - k; coord[1] = j + k;
+                threat.key_pos_list.push_back(coord);
+                result->push_back(threat);
+            }
+            next_loop6: k++;
+        }
+    }
     return *result;
 }
