@@ -11,19 +11,13 @@ class StdOrganizer: public GameOrganizer
 public:
     StdOrganizer(Board *_board = NULL, WinningJudge *_judge = NULL,
         Player *_black = NULL, Player *_white = NULL):
-            GameOrganizer(_board, _judge, _black, _white)
-                {request_black = true;}
+            GameOrganizer(_board, _judge, _black, _white) {}
     // Copy constructors
-    StdOrganizer(const StdOrganizer &src): GameOrganizer(src)
-        {request_black = src.request_black;}
-    StdOrganizer(const GameOrganizer &src): GameOrganizer(src)
-        {request_black = true;}
+    StdOrganizer(const StdOrganizer &src): GameOrganizer(src) {}
+    StdOrganizer(const GameOrganizer &src): GameOrganizer(src) {}
     // Destructor
     ~StdOrganizer() {return;}
-    bool request_te();
-private:
-    // This is to mark the one to te.
-    bool request_black;
+    void next();
 };
 
 #endif

@@ -10,6 +10,12 @@
 class GameOrganizer
 {
 public:
+    typedef unsigned CurrentRequest;
+    static const CurrentRequest invalid = 0;
+    static const CurrentRequest black_te = 1;
+    static const CurrentRequest black_remove = 2;
+    static const CurrentRequest white_te = 3;
+    static const CurrentRequest white_remove = 4;
     GameOrganizer(const GameOrganizer&);
     GameOrganizer(Board *_board = NULL, WinningJudge *_judge = NULL,
         Player *_black = NULL, Player *_white = NULL);
@@ -22,7 +28,13 @@ public:
     void set_judge(WinningJudge *_judge) {judge = _judge;}
     void set_black(Player*);
     void set_white(Player*);
-    virtual bool request_te() = 0;
+    Player *get_black() const {return black_player;}
+    Player *get_white() const {return white_player;}
+    WinningJudge *get_judge() const {return judge;}
+    WinningJudge::GameStatus game_status()
+        {if(judge) return judge->judge(); else return WinningJudge::ongoing;}
+    virtual void next() = 0;
+    CurrentRequest current_request() {return current_request_status;}
     friend class SingleGameFactory;
 protected:
     // A game instance has its own components!
@@ -31,6 +43,7 @@ protected:
     WinningJudge *judge;
     Player *black_player;
     Player *white_player;
+    CurrentRequest current_request_status;
 };
 
 #endif

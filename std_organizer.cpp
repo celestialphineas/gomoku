@@ -1,17 +1,12 @@
 #include "std_organizer.h"
 
-bool StdOrganizer::request_te()
+void StdOrganizer::next()
 {
-    if(request_black)
-    {
-        request_black = false;
-        if(!black_player) return false;
-        return black_player->te();
-    }
+    if(game_status() != WinningJudge::ongoing)
+        current_request_status = invalid;
+    if(current_request_status == black_te)
+        current_request_status = white_te;
     else
-    {
-        request_black = true;
-        if(!white_player) return false;
-        return white_player->te();
-    }
+        current_request_status = black_te;
+    return;
 }

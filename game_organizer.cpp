@@ -6,6 +6,7 @@ GameOrganizer::GameOrganizer(const GameOrganizer &src)
     judge = src.judge;
     black_player = src.black_player;
     white_player = src.white_player;
+    current_request_status = invalid;
     return;
 }
 
