@@ -1,6 +1,7 @@
 #include <iostream>
 #include "board.h"
 #include "std_gomoku_judge.h"
+#include "threat_finder.h"
 
 void print_board(const Board& board)
 {
@@ -15,6 +16,30 @@ void print_board(const Board& board)
         }
         std::cout << "  " << j << std::endl;
     }
+    std::cout << std::endl;
+    return;
+}
+
+void print_threats(const std::vector<Threat> &src)
+{
+    if(src.empty()) puts("No threats is found.");
+    else
+    {
+        for(std::vector<Threat>::const_iterator i = src.begin();
+            i != src.end(); i++)
+        {
+            std::cout << "Threat from "
+                << (i->threat_src ? "white" : "black") << ":" << std::endl;
+            std::cout << i->pos1_x << " " << i->pos1_y << " "
+                << i->pos2_x << " " << i->pos2_y << std::endl;
+            std::cout << "Key positions: ";
+            for(std::vector<std::vector<unsigned> >::const_iterator
+                j = i->key_pos_list.begin(); j != i->key_pos_list.end(); j++)
+            {
+                std::cout << (*j)[0] << " " << (*j)[1] << "  ";
+            }
+        }
+    }
     return;
 }
 
@@ -27,6 +52,12 @@ int main(void)
     {
         system("cls");
         print_board(*board);
+        ThreatFinder threat_finder(board);
+        std::vector<Threat> black_threats
+            = threat_finder.find_straight(ThreatFinder::black, 3);
+        std::vector<Threat> white_threats
+            = threat_finder.find_straight(ThreatFinder::white, 3);
+        print_threats(black_threats); print_threats(white_threats);
         std::cout << "Operation sequence: ";
         std::deque<Te> sequence = board->get_game_sequence();
         for(std::deque<Te>::iterator i = sequence.begin();
