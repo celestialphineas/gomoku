@@ -48,6 +48,8 @@ public:
     // white, and the second argument "n" is the number of the straight in-row
     // stones that you are to find.
     std::vector<Threat> &find_straight(bool who, unsigned n) const;
+    // This is used to find the in-row stones with one end blocked.
+    std::vector<Threat> &find_one_end_blocked(bool who, unsigned n) const;
 private:
     Board *board;
 };
