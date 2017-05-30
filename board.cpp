@@ -145,7 +145,7 @@ std::vector<Board::SelectedRow> Board::get_rows() const
         {
             new_row.row_list.push_back(get_status(i, j));
         }
-        result->push_back(new_row);
+        if(!new_row.row_list.empty()) result->push_back(new_row);
     }
     return *result;
 }
@@ -161,7 +161,7 @@ std::vector<Board::SelectedRow> Board::get_cols() const
         {
             new_col.row_list.push_back(get_status(i, j));
         }
-        result->push_back(new_col);
+        if(!new_col.row_list.empty()) result->push_back(new_col);
     }
     return *result;
 }
@@ -178,7 +178,7 @@ std::vector<Board::SelectedRow> Board::get_diags() const
         {
             new_diag.row_list.push_back(get_status(i + k, 1 + k));
         }
-        result->push_back(new_diag);
+        if(!new_diag.row_list.empty()) result->push_back(new_diag);
     }
     for(unsigned j = 2; j <= n_rows; j++)
     {
@@ -189,7 +189,7 @@ std::vector<Board::SelectedRow> Board::get_diags() const
         {
             new_diag.row_list.push_back(get_status(1 + k, j + k));
         }
-        result->push_back(new_diag);
+        if(!new_diag.row_list.empty()) result->push_back(new_diag);
     }
     return *result;
 }
@@ -197,16 +197,16 @@ std::vector<Board::SelectedRow> Board::get_diags() const
 std::vector<Board::SelectedRow> Board::get_adiags() const
 {
     std::vector<SelectedRow> *result = new std::vector<SelectedRow>;
-    for(unsigned i = 1; i <= n_cols; i++)
+    for(unsigned j = 1; j <= n_rows; j++)
     {
         SelectedRow new_adiag;
-        new_adiag.begin_x = i; new_adiag.begin_y = 1;
+        new_adiag.begin_x = 1; new_adiag.begin_y = j;
         for(unsigned k = 0;
-            i - k >= 1 && 1 + k <= n_rows; k++)
+            1 + k <= n_cols && j - k >= 1; k++)
         {
-            new_adiag.row_list.push_back(get_status(i - k, 1 + k));
+            new_adiag.row_list.push_back(get_status(1 + k, j - k));
         }
-        result->push_back(new_adiag);
+        if(!new_adiag.row_list.empty()) result->push_back(new_adiag);
     }
     for(unsigned i = 2; i <= n_cols; i++)
     {
@@ -217,7 +217,7 @@ std::vector<Board::SelectedRow> Board::get_adiags() const
         {
             new_adiag.row_list.push_back(get_status(i + k, n_rows - k));
         }
-        result->push_back(new_adiag);
+        if(!new_adiag.row_list.empty()) result->push_back(new_adiag);
     }
     return *result;
 }
