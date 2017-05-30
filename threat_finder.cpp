@@ -311,6 +311,7 @@ std::vector<Threat> &ThreatFinder::find_one_end_blocked(
             next_loop2: i++;
         }
     }
+
     // Second stage: check the columns
     for(unsigned i = 1; i <= board->n_col(); i++)
     {
@@ -404,6 +405,96 @@ std::vector<Threat> &ThreatFinder::find_one_end_blocked(
                 result->push_back(threat);
             }
             next_loop4: j++;
+        }
+    }
+
+    // Third stage: QAQ
+    for(int i = 1; i <= int(board->n_col()) - int(n_to_check); i++)
+    // Diagonals from (i, 1) ...
+    {
+        bool sequence_found = true;
+        for(unsigned k = 0; k < n_to_check; k++)
+        {
+            if(board->get_status(i + k, 1 + k) !=
+                (who ? Board::white_stone : Board::black_stone))
+                    {seqeunce_found = false; break;}
+        }
+        if(sequence_found
+            && board->get_status(i + n_to_check, 1 + n_to_check)
+                == Board::accessible)
+        {
+            Threat threat;
+            threat.threat_src = who;
+            threat.pos1_x = i; threat.pos1_y = 1;
+            threat.pos2_x = i + n_to_check - 1; threat.pos2_y = n_to_check;
+            std::vector<unsigned> coord;
+            coord.push_back(i + n_to_check); coord.push_back(n_to_check + 1);
+            threat.key_pos_list.push_back(coord);
+            result->push_back(threat);
+        }
+        sequence_found = true;
+        /////////////////////////////////////////////////
+        int k = 0; // k is the increment
+        while(k < int(board->n_row()) - int(n_to_check))
+        {
+            if(board->get_status(i + k, 1 + k) != Board::accessible)
+                {k++; continue;}
+            for(unsigned m = 1; m <= n_to_check; m++)
+            {
+                if(board->get_status(i + k + m, 1 + k + m)
+                    != (who ? Board::white_stone : Board::black_stone))
+                        goto next_loop3;
+            }
+            if(board->get_status(i + k + n_to_check + 1, k + n_to_check + 2)
+                == Board::accessible) // A threat spotted
+            {
+                Threat threat;
+                threat.threat_src = who;
+                threat.pos1_x = i + k + 1; threat.pos1_y = 2 + k;
+                threat.pos2_x = i + k + n_to_check;
+                threat.pos2_y = 1 + k + n_to_check;
+                std::vector<unsigned> coord;
+                coord.push_back(i + k); coord.push_back(1 + k);
+                threat.key_pos_list.push_back(coord);
+                coord[0] = i + k + n_to_check + 1;
+                coord[1] = k + n_to_check + 2;
+                threat.key_pos_list.push_back(coord);
+                result->push_back(threat);
+            }
+            next_loop3: k++;
+        }
+    }
+    for(int j = 2; j <= int(board->n_row()) - int(n_to_check); j++)
+    // Diagonals from (1, j)
+    {
+        int k = 0; // k is the increment
+        while(k < int(board->n_col()) - int(n_to_check))
+        {
+            if(board->get_status(1 + k, j + k) != Board::accessible)
+                {k++; continue;}
+            for(unsigned m = 1; m <= n_to_check; m++)
+            {
+                if(board->get_status(1 + k + m, j + k + m)
+                    != (who ? Board::white_stone : Board::black_stone))
+                        goto next_loop4;
+            }
+            if(board->get_status(k + n_to_check + 2, j + k + n_to_check + 1)
+                == Board::accessible) // A threat spotted
+            {
+                Threat threat;
+                threat.threat_src = who;
+                threat.pos1_x = k + 2; threat.pos1_y = j + k + 1;
+                threat.pos2_x = 1 + k + n_to_check;
+                threat.pos2_y = j + k + n_to_check;
+                std::vector<unsigned> coord;
+                coord.push_back(1 + k); coord.push_back(j + k);
+                threat.key_pos_list.push_back(coord);
+                coord[0] = k + n_to_check + 2;
+                coord[1] = j + k + n_to_check + 1;
+                threat.key_pos_list.push_back(coord);
+                result->push_back(threat);
+            }
+            next_loop4: k++;
         }
     }
     return *result;
