@@ -4,29 +4,27 @@
 #include "board.h"
 #include <vector>
 
-class Threat
-{
-public:
-    static const bool black = false;
-    static const bool white = true;
-    bool threat_src;
-    // The coordinates below are positions to locate the threat.
-    unsigned pos1_x;
-    unsigned pos1_y;
-    unsigned pos2_x;
-    unsigned pos2_y;
-    // The list is used to record all the key positions (positions that are
-    // possibly to solve the threat), the list is a vector consists of vectors
-    // of unsigned values to hold the x and y coordinates.
-    std::vector<std::vector<unsigned> > key_pos_list;
-};
-
 // The threat finder is used to find threats on a board. The threat finder
 // returns a list of Threat class instances to mark the threats and indicate the
 // corresponding key positions concerned in the threat.
 class ThreatFinder
 {
 public:
+    struct Threat
+    {
+        static const bool black = false;
+        static const bool white = true;
+        bool threat_src;
+        // The coordinates below are positions to locate the threat.
+        unsigned pos1_x;
+        unsigned pos1_y;
+        unsigned pos2_x;
+        unsigned pos2_y;
+        // The list is used to record all the key positions (positions that are
+        // possibly to solve the threat), the list is a vector consists of vectors
+        // of unsigned values to hold the x and y coordinates.
+        std::vector<std::vector<unsigned> > key_pos_list;
+    };
     static const bool black = false;
     static const bool white = true;
     ThreatFinder(Board *_board) {board = _board;}
@@ -47,9 +45,9 @@ public:
     // "who" indicates whether to find a threat from the black stone or the
     // white, and the second argument "n" is the number of the straight in-row
     // stones that you are to find.
-    std::vector<Threat> &find_straight(bool who, unsigned n) const;
+    std::vector<Threat> find_straight(bool who, unsigned n) const;
     // This is used to find the in-row stones with one end blocked.
-    std::vector<Threat> &find_one_end_blocked(bool who, unsigned n) const;
+    std::vector<Threat> find_one_end_blocked(bool who, unsigned n) const;
 private:
     Board *board;
 };

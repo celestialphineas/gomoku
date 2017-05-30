@@ -133,3 +133,91 @@ bool Board::empty() const
     }
     return true;
 }
+
+std::vector<Board::SelectedRow> Board::get_rows() const
+{
+    std::vector<SelectedRow> *result = new std::vector<SelectedRow>;
+    for(unsigned j = 1; j <= n_rows; j++)
+    {
+        SelectedRow new_row;
+        new_row.begin_x = 1; new_row.begin_y = j;
+        for(unsigned i = 1; i <= n_cols; i++)
+        {
+            new_row.row_list.push_back(get_status(i, j));
+        }
+        result->push_back(new_row);
+    }
+    return *result;
+}
+
+std::vector<Board::SelectedRow> Board::get_cols() const
+{
+    std::vector<SelectedRow> *result = new std::vector<SelectedRow>;
+    for(unsigned i = 1; i <= n_cols; i++)
+    {
+        SelectedRow new_col;
+        new_col.begin_x = i; new_col.begin_y = 1;
+        for(unsigned j = 1; j <= n_rows; j++)
+        {
+            new_col.row_list.push_back(get_status(i, j));
+        }
+        result->push_back(new_col);
+    }
+    return *result;
+}
+
+std::vector<Board::SelectedRow> Board::get_diags() const
+{
+    std::vector<SelectedRow> *result = new std::vector<SelectedRow>;
+    for(unsigned i = 1; i <= n_cols; i++)
+    {
+        SelectedRow new_diag;
+        new_diag.begin_x = i; new_diag.begin_y = 1;
+        for(unsigned k = 0;
+            i + k <= n_cols && 1 + k <= n_rows; k++)
+        {
+            new_diag.row_list.push_back(get_status(i + k, 1 + k));
+        }
+        result->push_back(new_diag);
+    }
+    for(unsigned j = 2; j <= n_rows; j++)
+    {
+        SelectedRow new_diag;
+        new_diag.begin_x = 1; new_diag.begin_y = j;
+        for(unsigned k = 0;
+            1 + k <= n_cols && j + k <= n_cols; k++)
+        {
+            new_diag.row_list.push_back(get_status(1 + k, j + k));
+        }
+        result->push_back(new_diag);
+    }
+    return *result;
+}
+
+std::vector<Board::SelectedRow> Board::get_adiags() const
+{
+    std::vector<SelectedRow> *result = new std::vector<SelectedRow>;
+    for(unsigned i = 1; i <= n_cols; i++)
+    {
+        SelectedRow new_adiag;
+        new_adiag.begin_x = i; new_adiag.begin_y = 1;
+        for(unsigned k = 0;
+            i - k >= 1 && 1 + k <= n_rows; k++)
+        {
+            new_adiag.row_list.push_back(get_status(i - k, 1 + k));
+        }
+        result->push_back(new_adiag);
+    }
+    for(unsigned i = 2; i <= n_cols; i++)
+    {
+        SelectedRow new_adiag;
+        new_adiag.begin_x = i; new_adiag.begin_y = n_rows;
+        for(unsigned k = 0;
+            i + k <= n_cols && n_rows - k >= 1; k++)
+        {
+            new_adiag.row_list.push_back(get_status(i + k, n_rows - k));
+        }
+        result->push_back(new_adiag);
+    }
+    return *result;
+}

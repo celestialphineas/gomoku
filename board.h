@@ -4,6 +4,7 @@
 #define __BOARD_H_
 
 #include <deque>
+#include <vector>
 #include "te.h"
 
 class Board
@@ -25,6 +26,22 @@ public:
     Board(unsigned _n_rows = 19, unsigned _n_cols = 19);
     ~Board();
     Board(const Board&);
+
+    struct SelectedRow
+    {
+        static const unsigned row = 1;
+        static const unsigned col = 2;
+        static const unsigned diag = 3;
+        static const unsigned adiag = 4;
+        unsigned begin_x;
+        unsigned begin_y;
+        std::vector<PosStatus> row_list;
+    };
+    // Return a SelectedRow from the board.
+    std::vector<SelectedRow> get_rows() const;
+    std::vector<SelectedRow> get_cols() const;
+    std::vector<SelectedRow> get_diags() const;
+    std::vector<SelectedRow> get_adiags() const;
 
     // The black_te and white_te method provides an interface for players to
     // interact with the board.
