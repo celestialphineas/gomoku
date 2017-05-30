@@ -48,13 +48,14 @@ std::vector<ThreatFinder::Threat> ThreatFinder::find_straight(
         arr[i] = (who ? Board::white_stone : Board::black_stone);
     arr[0] = Board::accessible;
     arr[n_to_check + 1] = Board::accessible;
+
     // Check the rows
     std::vector<Board::SelectedRow> rows = board->get_rows();
     for(std::vector<Board::SelectedRow>::const_iterator row = rows.begin();
         row != rows.end(); row++)
     {
         std::vector<unsigned> occurances
-            = find_occurances(row->row_list, arr, n_to_check + 1);
+            = find_occurances(row->row_list, arr, n_to_check + 2);
         for(std::vector<unsigned>::iterator i = occurances.begin();
             i != occurances.end(); i++)
         {
@@ -67,11 +68,91 @@ std::vector<ThreatFinder::Threat> ThreatFinder::find_straight(
             std::vector<unsigned> coord;
             coord.push_back(row->begin_x + *i); coord.push_back(row->begin_y);
             threat.key_pos_list.push_back(coord);
-            coord[0] = row->begin_x + *i + n_to_check - 1;
+            coord[0] = row->begin_x + *i + n_to_check + 1;
             threat.key_pos_list.push_back(coord);
             result->push_back(threat);
         }
     }
+
+    // Check the cols
+    std::vector<Board::SelectedRow> cols = board->get_cols();
+    for(std::vector<Board::SelectedRow>::const_iterator col = cols.begin();
+        col != cols.end(); col++)
+    {
+        std::vector<unsigned> occurances
+            = find_occurances(col->row_list, arr, n_to_check + 2);
+        for(std::vector<unsigned>::iterator i = occurances.begin();
+            i != occurances.end(); i++)
+        {
+            Threat threat;
+            threat.threat_src = who;
+            threat.pos1_x = col->begin_x;
+            threat.pos1_y = col->begin_y + *i + 1;
+            threat.pos2_x = col->begin_x;
+            threat.pos2_y = col->begin_y + *i + n_to_check;
+            std::vector<unsigned> coord;
+            coord.push_back(col->begin_x); coord.push_back(col->begin_y + *i);
+            threat.key_pos_list.push_back(coord);
+            coord[1] = col->begin_y + *i + n_to_check + 1;
+            threat.key_pos_list.push_back(coord);
+            result->push_back(threat);
+        }
+    }
+
+    // Check the diags
+    std::vector<Board::SelectedRow> diags = board->get_diags();
+    for(std::vector<Board::SelectedRow>::const_iterator diag = diags.begin();
+        diag != diags.end(); diag++)
+    {
+        std::vector<unsigned> occurances
+            = find_occurances(diag->row_list, arr, n_to_check + 2);
+        for(std::vector<unsigned>::iterator i = occurances.begin();
+            i != occurances.end(); i++)
+        {
+            Threat threat;
+            threat.threat_src = who;
+            threat.pos1_x = diag->begin_x + *i + 1;
+            threat.pos1_y = diag->begin_y + *i + 1;
+            threat.pos2_x = diag->begin_x + *i + n_to_check;
+            threat.pos2_y = diag->begin_y + *i + n_to_check;
+            std::vector<unsigned> coord;
+            coord.push_back(diag->begin_x + *i);
+            coord.push_back(diag->begin_y + *i);
+            threat.key_pos_list.push_back(coord);
+            coord[0] = diag->begin_x + *i + n_to_check + 1;
+            coord[1] = diag->begin_y + *i + n_to_check + 1;
+            threat.key_pos_list.push_back(coord);
+            result->push_back(threat);
+        }
+    }
+
+    // Check the adiags
+    std::vector<Board::SelectedRow> adiags = board->get_adiags();
+    for(std::vector<Board::SelectedRow>::const_iterator adiag = adiags.begin();
+        adiag != adiags.end(); adiag++)
+    {
+        std::vector<unsigned> occurances
+            = find_occurances(adiag->row_list, arr, n_to_check + 2);
+        for(std::vector<unsigned>::iterator i = occurances.begin();
+            i != occurances.end(); i++)
+        {
+            Threat threat;
+            threat.threat_src = who;
+            threat.pos1_x = adiag->begin_x + *i + 1;
+            threat.pos1_y = adiag->begin_y - *i - 1;
+            threat.pos2_x = adiag->begin_x + *i + n_to_check;
+            threat.pos2_y = adiag->begin_y - *i - n_to_check;
+            std::vector<unsigned> coord;
+            coord.push_back(adiag->begin_x + *i);
+            coord.push_back(adiag->begin_y - *i);
+            threat.key_pos_list.push_back(coord);
+            coord[0] = adiag->begin_x + *i + n_to_check + 1;
+            coord[1] = adiag->begin_y - *i - n_to_check - 1;
+            threat.key_pos_list.push_back(coord);
+            result->push_back(threat);
+        }
+    }
+
     delete[] arr;
     return *result;
 }
