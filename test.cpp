@@ -70,9 +70,9 @@ int main(void)
         print_board(*board);
         ThreatFinder threat_finder(board);
         std::vector<ThreatFinder::Threat> black_threats
-            = threat_finder.find_straight(ThreatFinder::black, 3);
+            = threat_finder.find_one_end_blocked(ThreatFinder::black, 3);
         std::vector<ThreatFinder::Threat> white_threats
-            = threat_finder.find_straight(ThreatFinder::white, 3);
+            = threat_finder.find_one_end_blocked(ThreatFinder::white, 3);
         print_threats(black_threats); print_threats(white_threats);
         std::cout << "Operation sequence: ";
         std::deque<Te> sequence = board->get_game_sequence();
