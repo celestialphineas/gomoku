@@ -311,5 +311,100 @@ std::vector<Threat> &ThreatFinder::find_one_end_blocked(
             next_loop2: i++;
         }
     }
+    // Second stage: check the columns
+    for(unsigned i = 1; i <= board->n_col(); i++)
+    {
+        // Check the bound
+        bool sequence_found = true;
+        for(unsigned j = 1; j <= n_to_check; j++)
+        {
+            if(board->get_status(i, j) !=
+                (who ? Board::white_stone : Board::black_stone))
+                    {sequence_found = false; break;}
+        }
+        if(sequence_found
+            && board->get_status(i, n_to_check + 1) == Board::accessible)
+        {
+            Threat threat;
+            threat.threat_src = who;
+            threat.pos1_x = i; threat.pos1_y = 1;
+            threat.pos2_x = i; threat.pos2_y = n_to_check;
+            std::vector<unsigned> coord;
+            coord.push_back(i); coord.push_back(n_to_check + 1);
+            threat.key_pos_list.push_back(coord);
+            result->push_back(threat);
+        }
+        // Again, check the other side fo the bound
+        sequence_found = true;
+        for(unsigned j = board->n_row() - n_to_check + 1;
+            j <= board->n_row(); j++)
+        {
+            if(board->get_status(i, j) != 
+                (who ? Board::white_stone : Board::black_stone))
+                    {sequence_found = false; break;}
+        }
+        if(sequence_found
+            && board->get_status(i, board->n_row() - n_to_check) == Board::accessible)
+        {
+            Threat threat;
+            threat.threat_src = who;
+            threat.pos1_x = i; threat.pos1_y = board->n_row() - n_to_check + 1;
+            threat.pos2_x = i; threat.pos2_y = board->n_row();
+            std::vector<unsigned> coord;
+            coord.push_back(i); coord.push_back(board->n_row() - n_to_check);
+            threat.key_pos_list.push_back(coord);
+            result->push_back(threat);
+        }
+        for(unsigned j = 1; j < board->n_row() - n_to_check;)
+        {
+            if(board->get_status(i, j) != 
+                (who ? Board::black_stone : Board::white_stone))
+                    {j++; continue;}
+            for(unsigned k = 1; k <= n_to_check; k++)
+            {
+                if(board->get_status(i, j + k)
+                    != (who ? Board::white_stone : Board::black_stone))
+                        goto next_loop3;
+            }
+            if(board->get_status(i, j + n_to_check + 1) == Board::accessible)
+            // A threat spotted
+            {
+                Threat threat;
+                threat.threat_src = who;
+                threat.pos1_x = i; threat.pos1_y = j + 1;
+                threat.pos2_x = i; threat.pos2_y = j + n_to_check;
+                std::vector<unsigned> coord;
+                coord.push_back(i); coord.push_back(j + n_to_check + 1);
+                threat.key_pos_list.push_back(coord);
+                result->push_back(threat);
+            }
+            next_loop3: j++;
+        }
+        for(unsigned j = 1; j < board->n_row() - n_to_check;)
+        {
+            if(board->get_status(i, j) != Board::accessible)
+                    {j++; continue;}
+            for(unsigned k = 1; k <= n_to_check; k++)
+            {
+                if(board->get_status(i, j + k)
+                    != (who ? Board::white_stone : Board::black_stone))
+                        goto next_loop4;
+            }
+            if(board->get_status(i, j + n_to_check + 1) ==
+                (who ? Board::black_stone : Board::white_stone))
+            // A threat spotted
+            {
+                Threat threat;
+                threat.threat_src = who;
+                threat.pos1_x = i; threat.pos1_y = j + 1;
+                threat.pos2_x = i; threat.pos2_y = j + n_to_check;
+                std::vector<unsigned> coord;
+                coord.push_back(i); coord.push_back(j);
+                threat.key_pos_list.push_back(coord);
+                result->push_back(threat);
+            }
+            next_loop4: j++;
+        }
+    }
     return *result;
 }
