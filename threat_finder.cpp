@@ -47,5 +47,6 @@ std::vector<unsigned> find_occurance(
             result->push_back(i - len);
         }
     }
+    delete funct;
     return *result;
 }
