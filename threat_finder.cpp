@@ -254,6 +254,89 @@ std::vector<ThreatFinder::Threat> ThreatFinder::find_one_end_blocked(
             result->push_back(threat);
         }
     }
+
+    // Check the cols
+    std::vector<Board::SelectedRow> cols = board->get_cols();
+    for(std::vector<Board::SelectedRow>::const_iterator col = cols.begin();
+        col != cols.end(); col++)
+    {
+        if(col->row_list.size() <= n_to_check + 2) continue;
+        std::vector<unsigned> occurances
+            = find_occurances(col->row_list, arr1, n_to_check + 2);
+        for(std::vector<unsigned>::iterator i = occurances.begin();
+            i != occurances.end(); i++)
+        {
+            Threat threat;
+            threat.threat_src = who;
+            threat.pos1_x = col->begin_x;
+            threat.pos1_y = col->begin_y + *i + 1;
+            threat.pos2_x = col->begin_x;
+            threat.pos2_y = col->begin_y + *i + n_to_check;
+            std::vector<unsigned> coord;
+            coord.push_back(col->begin_x);
+            coord.push_back(col->begin_y + *i + n_to_check + 1);
+            threat.key_pos_list.push_back(coord);
+            result->push_back(threat);
+        }
+        occurances = find_occurances(col->row_list, arr2, n_to_check + 2);
+        for(std::vector<unsigned>::iterator i = occurances.begin();
+            i != occurances.end(); i++)
+        {
+            Threat threat;
+            threat.threat_src = who;
+            threat.pos1_x = col->begin_x;
+            threat.pos1_y = col->begin_y + *i + 1;
+            threat.pos2_x = col->begin_x;
+            threat.pos2_y = col->begin_y + *i + n_to_check;
+            std::vector<unsigned> coord;
+            coord.push_back(col->begin_x);
+            coord.push_back(col->begin_y + *i);
+            threat.key_pos_list.push_back(coord);
+            result->push_back(threat);
+        }
+        bool blocked_by_edge = true;
+        for(unsigned i = 0; i < n_to_check; i++)
+        {
+            if(col->row_list[i] !=
+                (who ? Board::white_stone : Board::black_stone))
+                    {blocked_by_edge = false; break;}
+        }
+        if(blocked_by_edge && col->row_list[n_to_check] == Board::accessible)
+        {
+            Threat threat;
+            threat.threat_src = who;
+            threat.pos1_x = col->begin_x; threat.pos1_y = 1;
+            threat.pos2_x = col->begin_x; threat.pos2_y = n_to_check;
+            std::vector<unsigned> coord;
+            coord.push_back(col->begin_x);
+            coord.push_back(n_to_check + 1);
+            threat.key_pos_list.push_back(coord);
+            result->push_back(threat);
+        }
+        blocked_by_edge = true;
+        for(unsigned i = col->row_list.size() - n_to_check;
+            i < col->row_list.size(); i++)
+        {
+            if(col->row_list[i] !=
+                (who ? Board::white_stone : Board::black_stone))
+                    {blocked_by_edge = false; break;}
+        }
+        if(blocked_by_edge
+        && col->row_list[col->row_list.size() - n_to_check - 1] == Board::accessible)
+        {
+            Threat threat;
+            threat.threat_src = who;
+            threat.pos1_x = col->begin_x;
+            threat.pos1_y = col->begin_y + col->row_list.size() - n_to_check;
+            threat.pos2_x = col->begin_x;
+            threat.pos2_y = col->begin_y + col->row_list.size() - 1;
+            std::vector<unsigned> coord;
+            coord.push_back(col->begin_x);
+            coord.push_back(col->begin_y + col->row_list.size() - n_to_check - 1);
+            threat.key_pos_list.push_back(coord);
+            result->push_back(threat);
+        }
+    }
     delete[] arr1; delete[] arr2;
     return *result;
 }
