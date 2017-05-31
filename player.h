@@ -42,7 +42,7 @@ public:
     AIPlayer(Board *_board, bool _stone, WinningJudge *_judge)
         : Player(_board, _stone) {judge = _judge;}
     AIPlayer(const AIPlayer &src): Player(src) {judge = src.judge;}
-    ~AIPlayer() {return;}
+    virtual ~AIPlayer() {return;}
     // virtual Player *clone() const;
     void set_judge(WinningJudge *_judge) {judge = _judge;}
 protected:

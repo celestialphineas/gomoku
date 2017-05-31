@@ -126,10 +126,21 @@ bool Board::undo()
 bool Board::empty() const
 {
     if(game_sequence.empty()) return true;
-    for(unsigned i = 1; i <= n_rows; i++)
-    for(unsigned j = 1; j <= n_cols; j++)
+    for(unsigned i = 1; i <= n_cols; i++)
+    for(unsigned j = 1; j <= n_rows; j++)
     {
         if(get_status(i, j) != accessible) return false;
+    }
+    return true;
+}
+
+bool Board::full() const
+{
+    if(game_sequence.size() < n_cols * n_rows) return false;
+    for(unsigned i = 1; i <= n_cols; i++)
+    for(unsigned j = 1; j <= n_rows; j++)
+    {
+        if(get_status(i, j) == accessible) return false;
     }
     return true;
 }
