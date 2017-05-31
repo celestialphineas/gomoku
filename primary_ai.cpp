@@ -1,4 +1,6 @@
 #include "primary_ai.h"
+#include <algorithm>
+#include <ctime>
 
 static std::vector<std::vector<unsigned> > find_valid_pos(
     bool player_stone, const Board *board, const WinningJudge *judge)
@@ -57,8 +59,64 @@ bool PrimaryAI::te()
             }
         }
     }
+    // Find if there is a position to win
+    for(std::vector<std::vector<unsigned> >::const_iterator
+        i = te_candidates.begin(); i != te_candidates.end(); i++)
+    {
+        Board temp_board(*board);
+        WinningJudge *temp_judge = judge->clone();
+        temp_judge->set_board(&temp_board);
+        if(stone_color == black) temp_board.black_te((*i)[0], (*i)[1]);
+        else temp_board.white_te((*i)[0], (*i)[1]);
+        if(temp_judge->judge() ==
+            (stone_color ? WinningJudge::white_wins : WinningJudge::black_wins))
+        {
+            delete temp_judge;
+            if(stone_color == black) board->black_te((*i)[0], (*i)[1]);
+            else board->white_te((*i)[0], (*i)[1]);
+            return true;
+        }
+    }
+
     // Find if there is an immediate threat
-    // TODO!!!
+    // Find straight 3 and one-end-blocked 4
+    ThreatFinder threat_finder(board);
+    std::vector<ThreatFinder::Threat> straight3
+        = threat_finder.find_straight(!stone_color, 3);
+    std::vector<ThreatFinder::Threat> blocked4
+        = threat_finder.find_one_end_blocked(!stone_color, 4);
+    std::vector<std::vector<unsigned> > key_pos;
+    for(std::vector<ThreatFinder::Threat>::const_iterator
+        i = straight3.begin(); i != straight3.end(); i++)
+    {
+        key_pos.push_back((i->key_pos_list)[0]);
+        key_pos.push_back((i->key_pos_list)[1]);
+    }
+    for(std::vector<ThreatFinder::Threat>::const_iterator
+        i = blocked4.begin(); i != blocked4.end(); i++)
+            {key_pos.push_back((i->key_pos_list)[0]);}
+
+    std::sort(key_pos.begin(), key_pos.end());
+    // Deletion from the immediate threats
+    std::vector<unsigned> repeated;
+    for(std::vector<std::vector<unsigned> >::iterator
+        i = key_pos.begin(); (i + 1) != key_pos.end(); i++)
+    {
+        if((*i) == *(i+1))
+        {
+            repeated = (*i);
+            key_pos.erase(i + 1);
+            i--;    // TAKE CARE!!!
+        }
+    }
+    if(!repeated.empty())
+    {
+        if(stone_color == white) board->white_te(repeated[0], repeated[1]);
+        else board->black_te(repeated[0], repeated[1]);
+        return true;
+    }
+    te_candidates = key_pos;
+    // TODO: Evaluate the most valueable te!
 
     return true;
 }
