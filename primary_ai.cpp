@@ -33,6 +33,60 @@ static std::vector<std::vector<unsigned> > find_valid_pos(
     return *te_candidates;
 }
 
+static unsigned evaluate_board(const Board *board)
+{
+    static const unsigned median = 0xffffffff / 2;
+    static const unsigned d_straight1 = 2;
+    static const unsigned d_straight2 = 5;
+    static const unsigned d_straight3 = 50;
+    static const unsigned d_straight4 = 1000;
+    static const unsigned d_blocked1 = 1;
+    static const unsigned d_blocked2 = 4;
+    static const unsigned d_blocked3 = 20;
+    static const unsigned d_blocked4 = 500;
+    unsigned value = median;
+    ThreatFinder threat_finder(board);
+    value -= threat_finder.find_straight(ThreatFinder::black, 1).size()
+            * d_straight1;
+    value -= threat_finder.find_straight(ThreatFinder::black, 2).size()
+            * d_straight2;
+    value -= threat_finder.find_straight(ThreatFinder::black, 3).size()
+            * d_straight3;
+    value -= threat_finder.find_straight(ThreatFinder::black, 4).size()
+            * d_straight4;
+    value -= threat_finder.find_one_end_blocked(ThreatFinder::black, 1).size()
+            * d_blocked1;
+    value -= threat_finder.find_one_end_blocked(ThreatFinder::black, 2).size()
+            * d_blocked2;
+    value -= threat_finder.find_one_end_blocked(ThreatFinder::black, 3).size()
+            * d_blocked3;
+    value -= threat_finder.find_one_end_blocked(ThreatFinder::black, 4).size()
+            * d_blocked4;
+    value += threat_finder.find_straight(ThreatFinder::white, 1).size()
+            * d_straight1;
+    value += threat_finder.find_straight(ThreatFinder::white, 2).size()
+            * d_straight2;
+    value += threat_finder.find_straight(ThreatFinder::white, 3).size()
+            * d_straight3;
+    value += threat_finder.find_straight(ThreatFinder::white, 4).size()
+            * d_straight4;
+    value += threat_finder.find_one_end_blocked(ThreatFinder::white, 1).size()
+            * d_blocked1;
+    value += threat_finder.find_one_end_blocked(ThreatFinder::white, 2).size()
+            * d_blocked2;
+    value += threat_finder.find_one_end_blocked(ThreatFinder::white, 3).size()
+            * d_blocked3;
+    value += threat_finder.find_one_end_blocked(ThreatFinder::white, 4).size()
+            * d_blocked4;
+    return value;
+}
+
+bool black_comp(std::vector<unsigned> a, std::vector<unsigned> b)
+{if(a.size() < 3 || b.size() < 3) return true; return a[2] < b[2];}
+
+bool white_comp(std::vector<unsigned> a, std::vector<unsigned> b)
+{if(a.size() < 3 || b.size() < 3) return true; return a[2] > b[2];}
+
 bool PrimaryAI::te()
 {
     if(board->full()) return false;
@@ -99,8 +153,8 @@ bool PrimaryAI::te()
     std::sort(key_pos.begin(), key_pos.end());
     // Deletion from the immediate threats
     std::vector<unsigned> repeated;
-    for(std::vector<std::vector<unsigned> >::iterator
-        i = key_pos.begin(); (i + 1) != key_pos.end(); i++)
+    for(std::vector<std::vector<unsigned> >::iterator i = key_pos.begin();
+        i != key_pos.end() && i + 1 != key_pos.end(); i++)
     {
         if((*i) == *(i+1))
         {
@@ -117,7 +171,25 @@ bool PrimaryAI::te()
     }
     te_candidates = key_pos;
     // TODO: Evaluate the most valueable te!
-    
+    for(std::vector<std::vector<unsigned> >::iterator te = te_candidates.begin();
+        te != te_candidates.end(); te++)
+    {
+        Board temp_board(*board);
+        if(stone_color == black) temp_board.black_te((*te)[0], (*te)[1]);
+        else temp_board.white_te((*te)[0], (*te)[1]);
+        te->push_back(evaluate_board(&temp_board));
+    }
+    if(stone_color == black)
+    {
+        std::sort(te_candidates.begin(), te_candidates.end(), black_comp);
+        board->black_te(te_candidates[0][0], te_candidates[0][1]);
+    }
+    else
+    {
+        std::sort(te_candidates.begin(), te_candidates.end(), white_comp);
+        board->white_te(te_candidates[0][0], te_candidates[0][1]);
+    }
+
     return true;
 }
 

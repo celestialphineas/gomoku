@@ -27,7 +27,7 @@ public:
     };
     static const bool black = false;
     static const bool white = true;
-    ThreatFinder(Board *_board) {board = _board;}
+    ThreatFinder(const Board *_board) {board = _board;}
     ThreatFinder(const ThreatFinder &src) {board = src.board;}
     ~ThreatFinder() {return;}
     void set_board(Board *_board) {board = _board;}
@@ -49,7 +49,7 @@ public:
     // This is used to find the in-row stones with one end blocked.
     std::vector<Threat> find_one_end_blocked(bool who, unsigned n) const;
 private:
-    Board *board;
+    const Board *board;
 };
 
 #endif
