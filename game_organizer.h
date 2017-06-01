@@ -11,7 +11,7 @@ class GameOrganizer
 {
 public:
     typedef unsigned CurrentRequest;
-    static const CurrentRequest invalid = 0;
+    static const CurrentRequest game_ends = 0;
     static const CurrentRequest black_te = 1;
     static const CurrentRequest black_remove = 2;
     static const CurrentRequest white_te = 3;

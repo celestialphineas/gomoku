@@ -117,7 +117,7 @@ bool PrimaryAI::te()
     }
     te_candidates = key_pos;
     // TODO: Evaluate the most valueable te!
-
+    
     return true;
 }
 
