@@ -18,9 +18,9 @@ static unsigned evaluate_board(const Board *board)
     ThreatFinder threat_finder(board);
 
     std::vector<ThreatFinder::Threat> *found;
-    found = threat_finder.find_straight(ThreatFinder::black, 1);
-    value -= found->size() * d_straight1;
-    delete found;
+    // found = threat_finder.find_straight(ThreatFinder::black, 1);
+    // value -= found->size() * d_straight1;
+    // delete found;
 
     found = threat_finder.find_straight(ThreatFinder::black, 2);
     value -= found->size() * d_straight2;
