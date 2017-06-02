@@ -5,14 +5,14 @@
 static unsigned evaluate_board(const Board *board)
 {
     static const unsigned median = 0xffffffff / 2;
-    static const unsigned d_straight1 = 2;
+    static const unsigned d_straight1 = 1;
     static const unsigned d_straight2 = 5;
-    static const unsigned d_straight3 = 50;
+    static const unsigned d_straight3 = 500;
     static const unsigned d_straight4 = 1000;
-    static const unsigned d_blocked1 = 1;
+    static const unsigned d_blocked1 = 2;
     static const unsigned d_blocked2 = 4;
     static const unsigned d_blocked3 = 20;
-    static const unsigned d_blocked4 = 500;
+    static const unsigned d_blocked4 = 200;
 
     unsigned value = median;
     ThreatFinder threat_finder(board);
@@ -85,10 +85,10 @@ static unsigned evaluate_board(const Board *board)
     return value;
 }
 
-bool black_comp(std::vector<unsigned> a, std::vector<unsigned> b)
+static bool black_comp(std::vector<unsigned> a, std::vector<unsigned> b)
 {if(a.size() < 3 || b.size() < 3) return true; return a[2] < b[2];}
 
-bool white_comp(std::vector<unsigned> a, std::vector<unsigned> b)
+static bool white_comp(std::vector<unsigned> a, std::vector<unsigned> b)
 {if(a.size() < 3 || b.size() < 3) return true; return a[2] > b[2];}
 
 bool PrimaryAI::te()
@@ -103,15 +103,46 @@ bool PrimaryAI::te()
         return true;
     }
 
-    std::vector<std::vector<unsigned> > te_candidates;
-    for(unsigned i = 1; i <= board->n_col(); i++)
-    for(unsigned j = 1; j <= board->n_row(); j++)
+    // Find all the immediate threats
+    ThreatFinder threat_finder(board);
+    std::vector<ThreatFinder::Threat>* straight_threats
+        = threat_finder.find_straight(!stone_color, 3);
+    std::vector<ThreatFinder::Threat>* blocked_threats
+        = threat_finder.find_one_end_blocked(!stone_color, 4);
+    std::vector<std::vector<unsigned> > key_pos;
+    // Gather the immediate threats
+    for(std::vector<ThreatFinder::Threat>::iterator i = straight_threats->begin();
+        i != straight_threats->end(); i++)
     {
+        key_pos.insert(key_pos.end(), i->key_pos_list.begin(), i->key_pos_list.end());
+    }
+    for(std::vector<ThreatFinder::Threat>::iterator i = blocked_threats->begin();
+        i != blocked_threats->end(); i++)
+    {
+        key_pos.insert(key_pos.end(), i->key_pos_list.begin(), i->key_pos_list.end());
+    }
+    delete straight_threats; delete blocked_threats;
+
+    // Find the te candidates
+    std::vector<std::vector<unsigned> > te_candidates;
+    if(key_pos.empty())
+        for(unsigned i = 1; i <= board->n_col(); i++)
+        for(unsigned j = 1; j <= board->n_row(); j++)
+    {
+        std::deque<Te>* game_sequence = board->get_game_sequence();
+        if(game_sequence->size() < 8)
+        {
+            delete game_sequence;
+            if(i <= 5 || i > board->n_col() - 5
+            || j <= 5 || j > board->n_row() - 5)
+                {continue;}
+        }
         if(board->get_status(i, j) != Board::accessible) continue;
         std::vector<unsigned> coord;
         coord.push_back(i); coord.push_back(j);
         te_candidates.push_back(coord);
     }
+    else te_candidates = key_pos;
 
     // Get all the possible te
     Board temp_board(*board);
@@ -153,11 +184,38 @@ bool PrimaryAI::te()
         i++;
     }
 
-    if(stone_color == black)
-        board->black_te(te_candidates.front()[0], te_candidates.front()[1]);
-    else
-        board->white_te(te_candidates.front()[0], te_candidates.front()[1]);
+    for(std::vector<std::vector<unsigned> >::iterator i = te_candidates.begin();
+        i != te_candidates.end(); i++)
+    {
+        if(stone_color == black) temp_board.black_te((*i)[0], (*i)[1]);
+        else temp_board.white_te((*i)[0], (*i)[1]);
+        unsigned board_value = evaluate_board(&temp_board);
+        i->push_back(board_value);
+        temp_board.undo();
+    }
 
+    if(stone_color == black)
+        std::sort(te_candidates.begin(), te_candidates.end(), black_comp);
+    else
+        std::sort(te_candidates.begin(), te_candidates.end(), white_comp);
+
+    unsigned count = 0;
+    for(std::vector<std::vector<unsigned> >::iterator i = te_candidates.begin();
+        i != te_candidates.end(); i++)
+    {
+        if((*i)[2] == te_candidates.front()[2]) count++;
+    }
+    srand(unsigned(time(0)));
+    unsigned random_index = rand() % count;
+
+    if(stone_color == black)
+        board->black_te(te_candidates[random_index][0],
+            te_candidates[random_index][1]);
+    else
+        board->white_te(te_candidates[random_index][0],
+            te_candidates[random_index][1]);
+    
+    delete temp_judge;
     return true;
 }
 
