@@ -31,7 +31,7 @@ public:
     Player *get_black() const {return black_player;}
     Player *get_white() const {return white_player;}
     WinningJudge *get_judge() const {return judge;}
-    WinningJudge::GameStatus game_status()
+    WinningJudge::CurrentWinLoss game_status()
         {if(judge) return judge->judge(); else return WinningJudge::ongoing;}
     virtual void next() = 0;
     CurrentRequest current_request() {return current_request_status;}

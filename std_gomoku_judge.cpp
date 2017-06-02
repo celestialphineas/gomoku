@@ -1,6 +1,6 @@
 #include "std_gomoku_judge.h"
 
-StandardGomokuJudge::GameStatus StandardGomokuJudge::judge()
+StandardGomokuJudge::CurrentWinLoss StandardGomokuJudge::judge()
 {
     if(n_in_row > board->n_row() && n_in_row > board->n_col())
         return ongoing;

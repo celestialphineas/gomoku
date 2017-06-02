@@ -153,7 +153,7 @@ bool PrimaryAI::te()
     {
         if(stone_color == black) temp_board.black_te((*i)[0], (*i)[1]);
         else temp_board.white_te((*i)[0], (*i)[1]);
-        WinningJudge::GameStatus current_status = temp_judge->judge();
+        WinningJudge::CurrentWinLoss current_status = temp_judge->judge();
         // If loses
         if(current_status ==
             (stone_color ? WinningJudge::black_wins : WinningJudge::white_wins))

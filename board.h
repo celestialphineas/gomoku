@@ -18,10 +18,10 @@ public:
     static const PosStatus white_stone = 2;
     static const PosStatus undefined  = 0xffffffff;
     // And an integer for the status of a game.
-    typedef unsigned GameStatus;
-    static const GameStatus ongoing = 0;
-    static const GameStatus black_wins = 1;
-    static const GameStatus white_wins = 2;
+    typedef unsigned CurrentWinLoss;
+    static const CurrentWinLoss ongoing = 0;
+    static const CurrentWinLoss black_wins = 1;
+    static const CurrentWinLoss white_wins = 2;
     // Rule of three
     Board(unsigned _n_rows = 19, unsigned _n_cols = 19);
     ~Board();

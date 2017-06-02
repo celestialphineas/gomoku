@@ -1,6 +1,6 @@
 #include "free_style_judge.h"
 
-FreeStyleJudge::GameStatus FreeStyleJudge::judge()
+FreeStyleJudge::CurrentWinLoss FreeStyleJudge::judge()
 {
     if(n_in_row > board->n_row() && n_in_row > board->n_col())
         return ongoing;

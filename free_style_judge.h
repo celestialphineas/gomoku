@@ -10,7 +10,7 @@ public:
     FreeStyleJudge(Board *_board): WinningJudge(_board) {};
     FreeStyleJudge(const WinningJudge &src): WinningJudge(src) {};
     ~FreeStyleJudge() {};
-    GameStatus judge();
+    CurrentWinLoss judge();
     WinningJudge *clone() const {return new FreeStyleJudge(*this);}
 };
 

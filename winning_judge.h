@@ -19,10 +19,10 @@ protected:
     unsigned n_in_row;
 public:
     static const unsigned undef = 0xffffffff;
-    typedef unsigned GameStatus;
-    static const GameStatus ongoing = 0;
-    static const GameStatus black_wins = 1;
-    static const GameStatus white_wins = 2;
+    typedef unsigned CurrentWinLoss;
+    static const CurrentWinLoss ongoing = 0;
+    static const CurrentWinLoss black_wins = 1;
+    static const CurrentWinLoss white_wins = 2;
     WinningJudge(Board *_board)
     {
         board = _board;
@@ -48,7 +48,7 @@ public:
     unsigned get_marker1_y() const {return marker1_y;}
     unsigned get_marker2_x() const {return marker2_x;}
     unsigned get_marker2_y() const {return marker2_y;}
-    virtual GameStatus judge() = 0;
+    virtual CurrentWinLoss judge() = 0;
 };
 
 #endif
