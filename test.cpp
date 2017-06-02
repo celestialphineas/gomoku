@@ -107,10 +107,10 @@ int main(void)
         char instruction;
         std::cin >> instruction;
         int x, y;
-        std::vector<Board::SelectedRow> rows = board->get_rows();
-        std::vector<Board::SelectedRow> cols = board->get_cols();
-        std::vector<Board::SelectedRow> diags = board->get_diags();
-        std::vector<Board::SelectedRow> adiags = board->get_adiags();
+        std::vector<Board::SelectedRow> *rows = board->get_rows();
+        std::vector<Board::SelectedRow> *cols = board->get_cols();
+        std::vector<Board::SelectedRow> *diags = board->get_diags();
+        std::vector<Board::SelectedRow> *adiags = board->get_adiags();
         switch(instruction)
         {
             case 'b':
@@ -134,28 +134,29 @@ int main(void)
                 break;
             case '1':
                 system("cls");
-                print_rows(rows);
+                print_rows(*rows);
                 system("pause");
                 break;
             case '2':
                 system("cls");
-                print_rows(cols);
+                print_rows(*cols);
                 system("pause");
                 break;
             case '3':
                 system("cls");
-                print_rows(diags);
+                print_rows(*diags);
                 system("pause");
                 break;
             case '4':
                 system("cls");
-                print_rows(adiags);
+                print_rows(*adiags);
                 system("pause");
                 break;
             case 'q':
                 return 0;
             default: break;
         }
+        delete rows; delete cols; delete diags; delete adiags;
     }
     return 0;
 }

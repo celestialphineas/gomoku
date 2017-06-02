@@ -38,10 +38,10 @@ public:
         std::vector<PosStatus> row_list;
     };
     // Return a SelectedRow from the board.
-    std::vector<SelectedRow> get_rows() const;
-    std::vector<SelectedRow> get_cols() const;
-    std::vector<SelectedRow> get_diags() const;
-    std::vector<SelectedRow> get_adiags() const;
+    std::vector<SelectedRow> *get_rows() const;
+    std::vector<SelectedRow> *get_cols() const;
+    std::vector<SelectedRow> *get_diags() const;
+    std::vector<SelectedRow> *get_adiags() const;
 
     // The black_te and white_te method provides an interface for players to
     // interact with the board.

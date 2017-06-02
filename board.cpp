@@ -145,7 +145,7 @@ bool Board::full() const
     return true;
 }
 
-std::vector<Board::SelectedRow> Board::get_rows() const
+std::vector<Board::SelectedRow>* Board::get_rows() const
 {
     std::vector<SelectedRow> *result = new std::vector<SelectedRow>;
     for(unsigned j = 1; j <= n_rows; j++)
@@ -158,10 +158,10 @@ std::vector<Board::SelectedRow> Board::get_rows() const
         }
         if(!new_row.row_list.empty()) result->push_back(new_row);
     }
-    return *result;
+    return result;
 }
 
-std::vector<Board::SelectedRow> Board::get_cols() const
+std::vector<Board::SelectedRow>* Board::get_cols() const
 {
     std::vector<SelectedRow> *result = new std::vector<SelectedRow>;
     for(unsigned i = 1; i <= n_cols; i++)
@@ -174,10 +174,10 @@ std::vector<Board::SelectedRow> Board::get_cols() const
         }
         if(!new_col.row_list.empty()) result->push_back(new_col);
     }
-    return *result;
+    return result;
 }
 
-std::vector<Board::SelectedRow> Board::get_diags() const
+std::vector<Board::SelectedRow>* Board::get_diags() const
 {
     std::vector<SelectedRow> *result = new std::vector<SelectedRow>;
     for(unsigned i = 1; i <= n_cols; i++)
@@ -202,10 +202,10 @@ std::vector<Board::SelectedRow> Board::get_diags() const
         }
         if(!new_diag.row_list.empty()) result->push_back(new_diag);
     }
-    return *result;
+    return result;
 }
 
-std::vector<Board::SelectedRow> Board::get_adiags() const
+std::vector<Board::SelectedRow>* Board::get_adiags() const
 {
     std::vector<SelectedRow> *result = new std::vector<SelectedRow>;
     for(unsigned j = 1; j <= n_rows; j++)
@@ -230,5 +230,5 @@ std::vector<Board::SelectedRow> Board::get_adiags() const
         }
         if(!new_adiag.row_list.empty()) result->push_back(new_adiag);
     }
-    return *result;
+    return result;
 }

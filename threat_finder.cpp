@@ -50,9 +50,9 @@ std::vector<ThreatFinder::Threat> ThreatFinder::find_straight(
     arr[n_to_check + 1] = Board::accessible;
 
     // Check the rows
-    std::vector<Board::SelectedRow> rows = board->get_rows();
-    for(std::vector<Board::SelectedRow>::const_iterator row = rows.begin();
-        row != rows.end(); row++)
+    std::vector<Board::SelectedRow>* rows = board->get_rows();
+    for(std::vector<Board::SelectedRow>::const_iterator row = rows->begin();
+        row != rows->end(); row++)
     {
         std::vector<unsigned> occurances
             = find_occurances(row->row_list, arr, n_to_check + 2);
@@ -73,11 +73,12 @@ std::vector<ThreatFinder::Threat> ThreatFinder::find_straight(
             result->push_back(threat);
         }
     }
+    delete rows; rows = NULL;
 
     // Check the cols
-    std::vector<Board::SelectedRow> cols = board->get_cols();
-    for(std::vector<Board::SelectedRow>::const_iterator col = cols.begin();
-        col != cols.end(); col++)
+    std::vector<Board::SelectedRow>* cols = board->get_cols();
+    for(std::vector<Board::SelectedRow>::const_iterator col = cols->begin();
+        col != cols->end(); col++)
     {
         std::vector<unsigned> occurances
             = find_occurances(col->row_list, arr, n_to_check + 2);
@@ -98,11 +99,12 @@ std::vector<ThreatFinder::Threat> ThreatFinder::find_straight(
             result->push_back(threat);
         }
     }
+    delete cols; cols = NULL;
 
     // Check the diags
-    std::vector<Board::SelectedRow> diags = board->get_diags();
-    for(std::vector<Board::SelectedRow>::const_iterator diag = diags.begin();
-        diag != diags.end(); diag++)
+    std::vector<Board::SelectedRow>* diags = board->get_diags();
+    for(std::vector<Board::SelectedRow>::const_iterator diag = diags->begin();
+        diag != diags->end(); diag++)
     {
         std::vector<unsigned> occurances
             = find_occurances(diag->row_list, arr, n_to_check + 2);
@@ -125,11 +127,12 @@ std::vector<ThreatFinder::Threat> ThreatFinder::find_straight(
             result->push_back(threat);
         }
     }
+    delete diags; diags = NULL;
 
     // Check the adiags
-    std::vector<Board::SelectedRow> adiags = board->get_adiags();
-    for(std::vector<Board::SelectedRow>::const_iterator adiag = adiags.begin();
-        adiag != adiags.end(); adiag++)
+    std::vector<Board::SelectedRow>* adiags = board->get_adiags();
+    for(std::vector<Board::SelectedRow>::const_iterator adiag = adiags->begin();
+        adiag != adiags->end(); adiag++)
     {
         std::vector<unsigned> occurances
             = find_occurances(adiag->row_list, arr, n_to_check + 2);
@@ -152,6 +155,7 @@ std::vector<ThreatFinder::Threat> ThreatFinder::find_straight(
             result->push_back(threat);
         }
     }
+    delete adiags; adiags = NULL;
 
     delete[] arr;
     return *result;
@@ -173,9 +177,9 @@ std::vector<ThreatFinder::Threat> ThreatFinder::find_one_end_blocked(
     arr2[n_to_check + 1] = (who ? Board::black_stone : Board::white_stone);
 
     // Check the rows
-    std::vector<Board::SelectedRow> rows = board->get_rows();
-    for(std::vector<Board::SelectedRow>::const_iterator row = rows.begin();
-        row != rows.end(); row++)
+    std::vector<Board::SelectedRow>* rows = board->get_rows();
+    for(std::vector<Board::SelectedRow>::const_iterator row = rows->begin();
+        row != rows->end(); row++)
     {
         if(row->row_list.size() < n_to_check + 1) continue;
         std::vector<unsigned> occurances
@@ -254,11 +258,12 @@ std::vector<ThreatFinder::Threat> ThreatFinder::find_one_end_blocked(
             result->push_back(threat);
         }
     }
+    delete rows; rows = NULL;
 
     // Check the cols
-    std::vector<Board::SelectedRow> cols = board->get_cols();
-    for(std::vector<Board::SelectedRow>::const_iterator col = cols.begin();
-        col != cols.end(); col++)
+    std::vector<Board::SelectedRow>* cols = board->get_cols();
+    for(std::vector<Board::SelectedRow>::const_iterator col = cols->begin();
+        col != cols->end(); col++)
     {
         if(col->row_list.size() < n_to_check + 1) continue;
         std::vector<unsigned> occurances
@@ -337,11 +342,12 @@ std::vector<ThreatFinder::Threat> ThreatFinder::find_one_end_blocked(
             result->push_back(threat);
         }
     }
+    delete cols; cols = NULL;
 
     // Check the diags
-    std::vector<Board::SelectedRow> diags = board->get_diags();
-    for(std::vector<Board::SelectedRow>::const_iterator diag = diags.begin();
-        diag != diags.end(); diag++)
+    std::vector<Board::SelectedRow>* diags = board->get_diags();
+    for(std::vector<Board::SelectedRow>::const_iterator diag = diags->begin();
+        diag != diags->end(); diag++)
     {
         if(diag->row_list.size() < n_to_check + 1) continue;
         std::vector<unsigned> occurances
@@ -421,11 +427,12 @@ std::vector<ThreatFinder::Threat> ThreatFinder::find_one_end_blocked(
             result->push_back(threat);
         }
     }
+    delete diags; diags = NULL;
 
     // Check the adiags
-    std::vector<Board::SelectedRow> adiags = board->get_adiags();
-    for(std::vector<Board::SelectedRow>::const_iterator adiag = adiags.begin();
-        adiag != adiags.end(); adiag++)
+    std::vector<Board::SelectedRow>* adiags = board->get_adiags();
+    for(std::vector<Board::SelectedRow>::const_iterator adiag = adiags->begin();
+        adiag != adiags->end(); adiag++)
     {
         if(adiag->row_list.size() < n_to_check + 1) continue;
         std::vector<unsigned> occurances
@@ -505,6 +512,7 @@ std::vector<ThreatFinder::Threat> ThreatFinder::find_one_end_blocked(
             result->push_back(threat);
         }
     }
+    delete adiags; adiags = NULL;
     delete[] arr1; delete[] arr2;
     return *result;
 }
