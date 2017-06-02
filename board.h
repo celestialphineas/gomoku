@@ -64,8 +64,8 @@ public:
     // Get an instance of the latest te
     Te last_te() const {return game_sequence.back();}
     // Get an instance of the entire game process
-    std::deque<Te> get_game_sequence() const
-        {return *(new std::deque<Te>(game_sequence));}
+    std::deque<Te>* get_game_sequence() const
+        {return new std::deque<Te>(game_sequence);}
     // Undo, return true for succeed
     bool undo();
 private:

@@ -75,9 +75,9 @@ int main(void)
             = threat_finder.find_one_end_blocked(ThreatFinder::white, 3);
         print_threats(black_threats); print_threats(white_threats);
         std::cout << "Operation sequence: ";
-        std::deque<Te> sequence = board->get_game_sequence();
-        for(std::deque<Te>::iterator i = sequence.begin();
-            i != sequence.end(); i++)
+        std::deque<Te>* sequence = board->get_game_sequence();
+        for(std::deque<Te>::iterator i = sequence->begin();
+            i != sequence->end(); i++)
         {
             printf("(%u %s %s : %u %u) ",
                 i->id(),
@@ -156,6 +156,7 @@ int main(void)
                 return 0;
             default: break;
         }
+        delete sequence;
         delete rows; delete cols; delete diags; delete adiags;
     }
     return 0;
