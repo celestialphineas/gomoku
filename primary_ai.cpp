@@ -104,55 +104,44 @@ bool PrimaryAI::te()
     }
 
     std::vector<std::vector<unsigned> > te_candidates;
-    Board temp_board(*board);
-    WinningJudge *temp_judge = judge->clone();
-    temp_judge->set_board(&temp_board);
-
-    for(unsigned i = 1; i <= temp_board.n_col(); i++)
-    for(unsigned j = 1; j <= temp_board.n_row(); j++)
+    for(unsigned i = 1; i <= board->n_col(); i++)
+    for(unsigned j = 1; j <= board->n_row(); j++)
     {
-        if(temp_board.get_status(i, j) != Board::accessible) continue;
-        if(stone_color == black) temp_board.black_te(i, j);
-        else temp_board.white_te(i, j);
-        if(temp_judge->judge() ==
-            (stone_color ? WinningJudge::black_wins : WinningJudge::white_wins))
-                {temp_board.undo(); continue;}
+        if(board->get_status(i, j) != Board::accessible) continue;
         std::vector<unsigned> coord;
         coord.push_back(i); coord.push_back(j);
         te_candidates.push_back(coord);
-        temp_board.undo();
-    }
-    if(te_candidates.empty())
-    {
-        for(unsigned i = 1; i <= board->n_col(); i++)
-        for(unsigned j = 1; j <= board->n_row(); j++)
-        {
-            if(board->get_status(i, j) == Board::accessible)
-            {
-                if(stone_color == black)
-                {
-                    board->black_te(i, j);
-                    delete temp_judge;
-                    return true;
-                }
-                else
-                {
-                    board->white_te(i, j);
-                    delete temp_judge;
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 
-    // Find if there is a position to win
-    for(std::vector<std::vector<unsigned> >::const_iterator
-        i = te_candidates.begin(); i != te_candidates.end(); i++)
+    // Get all the possible te
+    Board temp_board(*board);
+    WinningJudge *temp_judge = judge->clone();
+    temp_judge->set_board(&temp_board);
+    for(std::vector<std::vector<unsigned> >::iterator i = te_candidates.begin();
+        i != te_candidates.end();)
     {
         if(stone_color == black) temp_board.black_te((*i)[0], (*i)[1]);
         else temp_board.white_te((*i)[0], (*i)[1]);
-        if(temp_judge->judge() == 
+        WinningJudge::GameStatus current_status = temp_judge->judge();
+        // If loses
+        if(current_status ==
+            (stone_color ? WinningJudge::black_wins : WinningJudge::white_wins))
+        {
+            if(te_candidates.size() > 1)
+            {
+                // Erase the losing element
+                i = te_candidates.erase(i);
+                temp_board.undo();
+                continue;
+            }
+            else // Preserve the element if there is only one left
+            {
+                temp_board.undo();
+                break;
+            }
+        }
+        // If wins
+        if(current_status ==
             (stone_color ? WinningJudge::white_wins : WinningJudge::black_wins))
         {
             delete temp_judge;
@@ -161,41 +150,14 @@ bool PrimaryAI::te()
             return true;
         }
         temp_board.undo();
+        i++;
     }
 
-    // Find the local optimal
-    for(std::vector<std::vector<unsigned> >::iterator te = te_candidates.begin();
-        te != te_candidates.end(); te++)
-    {
-        if(stone_color == black) temp_board.black_te((*te)[0], (*te)[1]);
-        else temp_board.white_te((*te)[0], (*te)[1]);
-        te->push_back(evaluate_board(&temp_board));
-        temp_board.undo();
-    }
     if(stone_color == black)
-    {
-        std::sort(te_candidates.begin(), te_candidates.end(), black_comp);
-    }
+        board->black_te(te_candidates.front()[0], te_candidates.front()[1]);
     else
-    {
-        std::sort(te_candidates.begin(), te_candidates.end(), white_comp);
-    }
-    std::vector<std::vector<unsigned> > optimal_list;
-    for(std::vector<std::vector<unsigned> >::iterator i = te_candidates.begin();
-        i != te_candidates.end(); i++)
-    {
-        if((*i)[2] == te_candidates[0][2])
-            optimal_list.push_back(*i);
-    }
-    srand(unsigned(time(0)));
-    unsigned random_index = rand() % optimal_list.size();
-    if(stone_color == black)
-        board->black_te(te_candidates[random_index][0],
-            te_candidates[random_index][1]);
-    else
-        board->white_te(te_candidates[random_index][0],
-            te_candidates[random_index][1]);
-    delete temp_judge;
+        board->white_te(te_candidates.front()[0], te_candidates.front()[1]);
+
     return true;
 }
 

@@ -31,7 +31,14 @@ public:
         n_in_row = 5;
         return;
     }
-    WinningJudge(const WinningJudge &src) {this->board = src.board;}
+    WinningJudge(const WinningJudge &src)
+    {
+        this->board = src.board;
+        marker1_x = src.marker1_x; marker1_y = src.marker1_y;
+        marker2_x = src.marker2_x; marker2_y = src.marker2_y;
+        n_in_row = src.n_in_row;
+        return;
+    }
     virtual ~WinningJudge() {return;}
     void set_board(Board *_board) {board = _board;}
     // We need a clone method to request an instance with a base class pointer.
