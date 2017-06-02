@@ -45,9 +45,9 @@ public:
     // "who" indicates whether to find a threat from the black stone or the
     // white, and the second argument "n" is the number of the straight in-row
     // stones that you are to find.
-    std::vector<Threat> find_straight(bool who, unsigned n) const;
+    std::vector<Threat>* find_straight(bool who, unsigned n) const;
     // This is used to find the in-row stones with one end blocked.
-    std::vector<Threat> find_one_end_blocked(bool who, unsigned n) const;
+    std::vector<Threat>* find_one_end_blocked(bool who, unsigned n) const;
 private:
     const Board *board;
 };

@@ -1,11 +1,11 @@
 #include "threat_finder.h"
 
 // An implementation of KMP o(TヘTo)~~~  
-std::vector<unsigned> find_occurances(
+std::vector<unsigned>* find_occurances(
     const std::vector<Board::PosStatus> &v, unsigned arr[], unsigned len)
 {
     std::vector<unsigned> *result = new std::vector<unsigned>;
-    if(v.size() < len) return *result;
+    if(v.size() < len) return result;
     int *funct = new int[v.size()];
     funct[0] = -1;
     for(int j = 1; j < int(v.size()); j++)
@@ -36,10 +36,10 @@ std::vector<unsigned> find_occurances(
         }
     }
     delete[] funct;
-    return *result;
+    return result;
 }
 
-std::vector<ThreatFinder::Threat> ThreatFinder::find_straight(
+std::vector<ThreatFinder::Threat>* ThreatFinder::find_straight(
     bool who, unsigned n_to_check) const
 {
     std::vector<Threat> *result = new std::vector<Threat>;
@@ -54,10 +54,10 @@ std::vector<ThreatFinder::Threat> ThreatFinder::find_straight(
     for(std::vector<Board::SelectedRow>::const_iterator row = rows->begin();
         row != rows->end(); row++)
     {
-        std::vector<unsigned> occurances
+        std::vector<unsigned>* occurances
             = find_occurances(row->row_list, arr, n_to_check + 2);
-        for(std::vector<unsigned>::iterator i = occurances.begin();
-            i != occurances.end(); i++)
+        for(std::vector<unsigned>::iterator i = occurances->begin();
+            i != occurances->end(); i++)
         {
             Threat threat;
             threat.threat_src = who;
@@ -72,6 +72,7 @@ std::vector<ThreatFinder::Threat> ThreatFinder::find_straight(
             threat.key_pos_list.push_back(coord);
             result->push_back(threat);
         }
+        delete occurances;
     }
     delete rows; rows = NULL;
 
@@ -80,10 +81,10 @@ std::vector<ThreatFinder::Threat> ThreatFinder::find_straight(
     for(std::vector<Board::SelectedRow>::const_iterator col = cols->begin();
         col != cols->end(); col++)
     {
-        std::vector<unsigned> occurances
+        std::vector<unsigned>* occurances
             = find_occurances(col->row_list, arr, n_to_check + 2);
-        for(std::vector<unsigned>::iterator i = occurances.begin();
-            i != occurances.end(); i++)
+        for(std::vector<unsigned>::iterator i = occurances->begin();
+            i != occurances->end(); i++)
         {
             Threat threat;
             threat.threat_src = who;
@@ -98,6 +99,7 @@ std::vector<ThreatFinder::Threat> ThreatFinder::find_straight(
             threat.key_pos_list.push_back(coord);
             result->push_back(threat);
         }
+        delete occurances;
     }
     delete cols; cols = NULL;
 
@@ -106,10 +108,10 @@ std::vector<ThreatFinder::Threat> ThreatFinder::find_straight(
     for(std::vector<Board::SelectedRow>::const_iterator diag = diags->begin();
         diag != diags->end(); diag++)
     {
-        std::vector<unsigned> occurances
+        std::vector<unsigned>* occurances
             = find_occurances(diag->row_list, arr, n_to_check + 2);
-        for(std::vector<unsigned>::iterator i = occurances.begin();
-            i != occurances.end(); i++)
+        for(std::vector<unsigned>::iterator i = occurances->begin();
+            i != occurances->end(); i++)
         {
             Threat threat;
             threat.threat_src = who;
@@ -126,6 +128,7 @@ std::vector<ThreatFinder::Threat> ThreatFinder::find_straight(
             threat.key_pos_list.push_back(coord);
             result->push_back(threat);
         }
+        delete occurances;
     }
     delete diags; diags = NULL;
 
@@ -134,10 +137,10 @@ std::vector<ThreatFinder::Threat> ThreatFinder::find_straight(
     for(std::vector<Board::SelectedRow>::const_iterator adiag = adiags->begin();
         adiag != adiags->end(); adiag++)
     {
-        std::vector<unsigned> occurances
+        std::vector<unsigned>* occurances
             = find_occurances(adiag->row_list, arr, n_to_check + 2);
-        for(std::vector<unsigned>::iterator i = occurances.begin();
-            i != occurances.end(); i++)
+        for(std::vector<unsigned>::iterator i = occurances->begin();
+            i != occurances->end(); i++)
         {
             Threat threat;
             threat.threat_src = who;
@@ -154,14 +157,15 @@ std::vector<ThreatFinder::Threat> ThreatFinder::find_straight(
             threat.key_pos_list.push_back(coord);
             result->push_back(threat);
         }
+        delete occurances;
     }
     delete adiags; adiags = NULL;
 
     delete[] arr;
-    return *result;
+    return result;
 }
 
-std::vector<ThreatFinder::Threat> ThreatFinder::find_one_end_blocked(
+std::vector<ThreatFinder::Threat>* ThreatFinder::find_one_end_blocked(
     bool who, unsigned n_to_check) const
 {
     std::vector<Threat> *result = new std::vector<Threat>;
@@ -182,10 +186,10 @@ std::vector<ThreatFinder::Threat> ThreatFinder::find_one_end_blocked(
         row != rows->end(); row++)
     {
         if(row->row_list.size() < n_to_check + 1) continue;
-        std::vector<unsigned> occurances
+        std::vector<unsigned>* occurances
             = find_occurances(row->row_list, arr1, n_to_check + 2);
-        for(std::vector<unsigned>::iterator i = occurances.begin();
-            i != occurances.end(); i++)
+        for(std::vector<unsigned>::iterator i = occurances->begin();
+            i != occurances->end(); i++)
         {
             Threat threat;
             threat.threat_src = who;
@@ -199,9 +203,10 @@ std::vector<ThreatFinder::Threat> ThreatFinder::find_one_end_blocked(
             threat.key_pos_list.push_back(coord);
             result->push_back(threat);
         }
+        delete occurances;
         occurances = find_occurances(row->row_list, arr2, n_to_check + 2);
-        for(std::vector<unsigned>::iterator i = occurances.begin();
-            i != occurances.end(); i++)
+        for(std::vector<unsigned>::iterator i = occurances->begin();
+            i != occurances->end(); i++)
         {
             Threat threat;
             threat.threat_src = who;
@@ -257,6 +262,7 @@ std::vector<ThreatFinder::Threat> ThreatFinder::find_one_end_blocked(
             threat.key_pos_list.push_back(coord);
             result->push_back(threat);
         }
+        delete occurances;
     }
     delete rows; rows = NULL;
 
@@ -266,10 +272,10 @@ std::vector<ThreatFinder::Threat> ThreatFinder::find_one_end_blocked(
         col != cols->end(); col++)
     {
         if(col->row_list.size() < n_to_check + 1) continue;
-        std::vector<unsigned> occurances
+        std::vector<unsigned>* occurances
             = find_occurances(col->row_list, arr1, n_to_check + 2);
-        for(std::vector<unsigned>::iterator i = occurances.begin();
-            i != occurances.end(); i++)
+        for(std::vector<unsigned>::iterator i = occurances->begin();
+            i != occurances->end(); i++)
         {
             Threat threat;
             threat.threat_src = who;
@@ -283,9 +289,10 @@ std::vector<ThreatFinder::Threat> ThreatFinder::find_one_end_blocked(
             threat.key_pos_list.push_back(coord);
             result->push_back(threat);
         }
+        delete occurances;
         occurances = find_occurances(col->row_list, arr2, n_to_check + 2);
-        for(std::vector<unsigned>::iterator i = occurances.begin();
-            i != occurances.end(); i++)
+        for(std::vector<unsigned>::iterator i = occurances->begin();
+            i != occurances->end(); i++)
         {
             Threat threat;
             threat.threat_src = who;
@@ -341,6 +348,7 @@ std::vector<ThreatFinder::Threat> ThreatFinder::find_one_end_blocked(
             threat.key_pos_list.push_back(coord);
             result->push_back(threat);
         }
+        delete occurances;
     }
     delete cols; cols = NULL;
 
@@ -350,10 +358,10 @@ std::vector<ThreatFinder::Threat> ThreatFinder::find_one_end_blocked(
         diag != diags->end(); diag++)
     {
         if(diag->row_list.size() < n_to_check + 1) continue;
-        std::vector<unsigned> occurances
+        std::vector<unsigned>* occurances
             = find_occurances(diag->row_list, arr1, n_to_check + 2);
-        for(std::vector<unsigned>::iterator i = occurances.begin();
-            i != occurances.end(); i++)
+        for(std::vector<unsigned>::iterator i = occurances->begin();
+            i != occurances->end(); i++)
         {
             Threat threat;
             threat.threat_src = who;
@@ -367,9 +375,10 @@ std::vector<ThreatFinder::Threat> ThreatFinder::find_one_end_blocked(
             threat.key_pos_list.push_back(coord);
             result->push_back(threat);
         }
+        delete occurances;
         occurances = find_occurances(diag->row_list, arr2, n_to_check + 2);
-        for(std::vector<unsigned>::iterator i = occurances.begin();
-            i != occurances.end(); i++)
+        for(std::vector<unsigned>::iterator i = occurances->begin();
+            i != occurances->end(); i++)
         {
             Threat threat;
             threat.threat_src = who;
@@ -426,6 +435,7 @@ std::vector<ThreatFinder::Threat> ThreatFinder::find_one_end_blocked(
             threat.key_pos_list.push_back(coord);
             result->push_back(threat);
         }
+        delete occurances;
     }
     delete diags; diags = NULL;
 
@@ -435,10 +445,10 @@ std::vector<ThreatFinder::Threat> ThreatFinder::find_one_end_blocked(
         adiag != adiags->end(); adiag++)
     {
         if(adiag->row_list.size() < n_to_check + 1) continue;
-        std::vector<unsigned> occurances
+        std::vector<unsigned>* occurances
             = find_occurances(adiag->row_list, arr1, n_to_check + 2);
-        for(std::vector<unsigned>::iterator i = occurances.begin();
-            i != occurances.end(); i++)
+        for(std::vector<unsigned>::iterator i = occurances->begin();
+            i != occurances->end(); i++)
         {
             Threat threat;
             threat.threat_src = who;
@@ -452,9 +462,10 @@ std::vector<ThreatFinder::Threat> ThreatFinder::find_one_end_blocked(
             threat.key_pos_list.push_back(coord);
             result->push_back(threat);
         }
+        delete occurances;
         occurances = find_occurances(adiag->row_list, arr2, n_to_check + 2);
-        for(std::vector<unsigned>::iterator i = occurances.begin();
-            i != occurances.end(); i++)
+        for(std::vector<unsigned>::iterator i = occurances->begin();
+            i != occurances->end(); i++)
         {
             Threat threat;
             threat.threat_src = who;
@@ -511,8 +522,9 @@ std::vector<ThreatFinder::Threat> ThreatFinder::find_one_end_blocked(
             threat.key_pos_list.push_back(coord);
             result->push_back(threat);
         }
+        delete occurances;
     }
     delete adiags; adiags = NULL;
     delete[] arr1; delete[] arr2;
-    return *result;
+    return result;
 }

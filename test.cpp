@@ -69,11 +69,11 @@ int main(void)
         system("cls");
         print_board(*board);
         ThreatFinder threat_finder(board);
-        std::vector<ThreatFinder::Threat> black_threats
+        std::vector<ThreatFinder::Threat>* black_threats
             = threat_finder.find_one_end_blocked(ThreatFinder::black, 3);
-        std::vector<ThreatFinder::Threat> white_threats
+        std::vector<ThreatFinder::Threat>* white_threats
             = threat_finder.find_one_end_blocked(ThreatFinder::white, 3);
-        print_threats(black_threats); print_threats(white_threats);
+        print_threats(*black_threats); print_threats(*white_threats);
         std::cout << "Operation sequence: ";
         std::deque<Te>* sequence = board->get_game_sequence();
         for(std::deque<Te>::iterator i = sequence->begin();
@@ -156,7 +156,7 @@ int main(void)
                 return 0;
             default: break;
         }
-        delete sequence;
+        delete black_threats; delete white_threats; delete sequence;
         delete rows; delete cols; delete diags; delete adiags;
     }
     return 0;
