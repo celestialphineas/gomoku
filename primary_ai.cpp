@@ -5,7 +5,7 @@
 static unsigned evaluate_board(const Board *board)
 {
     static const unsigned median = 0xffffffff / 2;
-    static const unsigned d_straight1 = 1;
+    // static const unsigned d_straight1 = 1;
     static const unsigned d_straight2 = 5;
     static const unsigned d_straight3 = 500;
     static const unsigned d_straight4 = 1000;
@@ -50,9 +50,9 @@ static unsigned evaluate_board(const Board *board)
     value -= found->size() * d_blocked4;
     delete found;
 
-    found = threat_finder.find_straight(ThreatFinder::white, 1);
-    value += found->size() * d_straight1;
-    delete found;
+    // found = threat_finder.find_straight(ThreatFinder::white, 1);
+    // value += found->size() * d_straight1;
+    // delete found;
 
     found = threat_finder.find_straight(ThreatFinder::white, 2);
     value += found->size() * d_straight2;
@@ -221,7 +221,35 @@ bool PrimaryAI::te()
 
 bool PrimaryAI::remove(const std::vector<Te> te_candidates)
 {
-    // TODO!!!
     if(te_candidates.size() == 0) return false;
+    Board temp_board(*board);
+    WinningJudge *temp_judge = judge->clone();
+    temp_judge->set_board(&temp_board);
+
+    std::vector<Te>::const_iterator min_it;
+    std::vector<Te>::const_iterator max_it;
+    unsigned found_min = 0xffffffff, found_max = 0;
+    for(std::vector<Te>::const_iterator i = te_candidates.begin();
+        i != te_candidates.end(); i++)
+    {
+        if(stone_color == black) temp_board.black_remove(i->x(), i->y());
+        else temp_board.white_remove(i->x(), i->y());
+        unsigned board_value = evaluate_board(&temp_board);
+        if(board_value <= found_min)
+        {
+            found_min = board_value;
+            min_it = i;
+        }
+        if(board_value >= found_max)
+        {
+            found_max = board_value;
+            max_it = i;
+        }
+        temp_board.undo();
+    }
+    if(stone_color == black) board->black_remove(min_it->x(), min_it->y());
+    else board->white_remove(max_it->x(), max_it->y());
+
+    delete temp_judge;
     return true;
 }

@@ -17,6 +17,9 @@
 class Player
 {
 public:
+    typedef unsigned PlayerType;
+    static const PlayerType ai_player = 1;
+    static const PlayerType human_player = 2;
     static const bool black = false;
     static const bool white = true;
     Player(Board *_board, bool _stone) {board = _board; stone_color = _stone;}
@@ -25,10 +28,12 @@ public:
     virtual ~Player() {return;}
     // We need a clone method to request an instance with a base class pointer.
     virtual Player *clone() const = 0;
+    virtual PlayerType player_type() const = 0;
     bool is_black() const {return !stone_color;}
     bool is_white() const {return stone_color;}
     void set_board(Board *_board) {board = _board;}
     void set_stone(bool _stone) {stone_color = _stone;}
+    // The return value is success or not
     virtual bool te() = 0;
     virtual bool remove(const std::vector<Te> te_candidates);
 protected:
@@ -42,8 +47,11 @@ public:
     AIPlayer(Board *_board, bool _stone, WinningJudge *_judge)
         : Player(_board, _stone) {judge = _judge;}
     AIPlayer(const AIPlayer &src): Player(src) {judge = src.judge;}
+    PlayerType player_type() const {return ai_player;}
     virtual ~AIPlayer() {return;}
     // virtual Player *clone() const;
+    // virtual bool te();
+    // virtual remove(const std::vector<Te> te_candidates);
     void set_judge(WinningJudge *_judge) {judge = _judge;}
 protected:
     WinningJudge *judge;

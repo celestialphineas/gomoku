@@ -35,7 +35,6 @@ public:
         {if(judge) return judge->judge(); else return WinningJudge::ongoing;}
     virtual void next() = 0;
     CurrentRequest current_request() {return current_request_status;}
-    friend class SingleGameFactory;
 protected:
     // A game instance has its own components!
     // The pointers below each point to an unique instance.
