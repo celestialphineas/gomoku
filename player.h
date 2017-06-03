@@ -35,10 +35,13 @@ public:
     void set_stone(bool _stone) {stone_color = _stone;}
     // The return value is success or not
     virtual bool te() = 0;
-    virtual bool remove(const std::vector<Te> te_candidates);
+    void set_remove_candidates(const std::vector<Te>& _remove_candidates)
+        {remove_candidates = _remove_candidates;}
+    virtual bool remove();
 protected:
     Board *board;
     bool stone_color;
+    std::vector<Te> remove_candidates;
 };
 
 class AIPlayer: public Player
@@ -51,7 +54,7 @@ public:
     virtual ~AIPlayer() {return;}
     // virtual Player *clone() const;
     // virtual bool te();
-    // virtual remove(const std::vector<Te> te_candidates);
+    // virtual remove();
     void set_judge(WinningJudge *_judge) {judge = _judge;}
 protected:
     WinningJudge *judge;

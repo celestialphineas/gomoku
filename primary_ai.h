@@ -13,7 +13,7 @@ public:
     PrimaryAI(const AIPlayer &src): AIPlayer(src) {}
     Player *clone() const {return new PrimaryAI(*this);}
     bool te();
-    bool remove(const std::vector<Te> te_candidates);
+    bool remove();
 };
 
 #endif

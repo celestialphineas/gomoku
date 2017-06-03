@@ -219,9 +219,9 @@ bool PrimaryAI::te()
     return true;
 }
 
-bool PrimaryAI::remove(const std::vector<Te> te_candidates)
+bool PrimaryAI::remove()
 {
-    if(te_candidates.size() == 0) return false;
+    if(remove_candidates.size() == 0) return false;
     Board temp_board(*board);
     WinningJudge *temp_judge = judge->clone();
     temp_judge->set_board(&temp_board);
@@ -229,8 +229,8 @@ bool PrimaryAI::remove(const std::vector<Te> te_candidates)
     std::vector<Te>::const_iterator min_it;
     std::vector<Te>::const_iterator max_it;
     unsigned found_min = 0xffffffff, found_max = 0;
-    for(std::vector<Te>::const_iterator i = te_candidates.begin();
-        i != te_candidates.end(); i++)
+    for(std::vector<Te>::const_iterator i = remove_candidates.begin();
+        i != remove_candidates.end(); i++)
     {
         if(stone_color == black) temp_board.black_remove(i->x(), i->y());
         else temp_board.white_remove(i->x(), i->y());
