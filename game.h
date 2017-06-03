@@ -17,6 +17,13 @@ public:
     static const GameStatus black_wins = 1;
     static const GameStatus white_wins = 2;
     static const GameStatus not_started = 3;
+    typedef unsigned InputStatus;
+    static const InputStatus blocked = 0;
+    static const InputStatus black_te = 1;
+    static const InputStatus black_remove = 2;
+    static const InputStatus white_te = 3;
+    static const InputStatus white_remove = 4;
+    static const InputStatus exchange_choice = 5;
 
     Game(const Game&);
     ~Game();

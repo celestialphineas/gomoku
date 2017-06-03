@@ -16,6 +16,7 @@ public:
     static const CurrentRequest black_remove = 2;
     static const CurrentRequest white_te = 3;
     static const CurrentRequest white_remove = 4;
+    static const CurrentRequest exchange_choice = 5;
     GameOrganizer(const GameOrganizer&);
     GameOrganizer(Board *_board = NULL, WinningJudge *_judge = NULL,
         Player *_black = NULL, Player *_white = NULL);
