@@ -34,6 +34,19 @@ Game::Game(const Game& src)
     return;
 }
 
+Game::~Game()
+{
+    for(unsigned i = 0; i < rounds; i++)
+    {
+        delete organizers[i]; delete black_players[i];
+        delete white_players[i]; delete judges[i];
+        delete boards[i];
+    }
+    delete[] game_statuses; delete[] boards;
+    delete[] judges; delete[] black_players;
+    delete[] white_players; delete[] organizers;
+}
+
 bool Game::switch_to_round(unsigned round_index)
 {
     if(round_index <= 0 || round_index > rounds) return false;
