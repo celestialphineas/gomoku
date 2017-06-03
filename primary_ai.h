@@ -1,6 +1,8 @@
 #ifndef __PRIMARY_AI_H_
 #define __PRIMARY_AI_H_
 
+#include <ctime>
+#include <cstdlib>
 #include "player.h"
 #include "threat_finder.h"
 #include "winning_judge.h"
@@ -14,6 +16,7 @@ public:
     Player *clone() const {return new PrimaryAI(*this);}
     bool te();
     bool remove();
+    bool exchange_choice();
 };
 
 #endif

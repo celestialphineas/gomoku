@@ -29,6 +29,12 @@ bool HumanPlayer::input(unsigned x, unsigned y)
     return false;
 }
 
+bool HumanPlayer::input(bool _exchange_choice)
+{
+    exchange_choice_buf = _exchange_choice;
+    return true;
+}
+
 bool HumanPlayer::te()
 {
     if(!there_is_something_in) return false;

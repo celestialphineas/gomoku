@@ -254,3 +254,6 @@ bool PrimaryAI::remove()
     remove_candidates.erase(remove_candidates.begin(), remove_candidates.end());
     return true;
 }
+
+bool PrimaryAI::exchange_choice()
+{return false;}

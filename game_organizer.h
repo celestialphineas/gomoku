@@ -14,9 +14,10 @@ public:
     static const CurrentRequest game_ends = 0;
     static const CurrentRequest black_te = 1;
     static const CurrentRequest black_remove = 2;
-    static const CurrentRequest white_te = 3;
-    static const CurrentRequest white_remove = 4;
-    static const CurrentRequest exchange_choice = 5;
+    static const CurrentRequest black_exchange = 3;
+    static const CurrentRequest white_te = 4;
+    static const CurrentRequest white_remove = 5;
+    static const CurrentRequest white_exchange = 6;
     GameOrganizer(const GameOrganizer&);
     GameOrganizer(Board *_board = NULL, WinningJudge *_judge = NULL,
         Player *_black = NULL, Player *_white = NULL);
@@ -33,10 +34,10 @@ public:
     Player *get_black() const {return black_player;}
     Player *get_white() const {return white_player;}
     WinningJudge *get_judge() const {return judge;}
-    WinningJudge::CurrentWinLoss game_status()
+    WinningJudge::CurrentWinLoss game_status() const
         {if(judge) return judge->judge(); else return WinningJudge::ongoing;}
     virtual void next() = 0;
-    CurrentRequest current_request() {return current_request_status;}
+    CurrentRequest current_request() const {return current_request_status;}
 protected:
     // A game instance has its own components!
     // The pointers below each point to an unique instance.

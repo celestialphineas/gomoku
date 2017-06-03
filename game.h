@@ -21,49 +21,49 @@ public:
     static const GameStatus black_wins = 1;
     static const GameStatus white_wins = 2;
     static const GameStatus not_started = 3;
-    typedef unsigned InputStatus;
-    static const InputStatus blocked = 0;
-    static const InputStatus black_te = 1;
-    static const InputStatus black_remove = 2;
-    static const InputStatus white_te = 3;
-    static const InputStatus white_remove = 4;
-    static const InputStatus exchange_choice = 5;
 
     Game(const Game&);
     ~Game();
 
+    // Related with rounds
     unsigned n_rounds() const {return n_rounds;}
     // The return value starts from 1
-    unsigned current_round() const {return current_round_index + 1;}
+    unsigned current_round() const {return current + 1;}
     bool switch_to_round(unsigned round_index);    
     bool next_round_validity() const;
     bool previous_round_validity() const;
     bool switch_to_next_round();
     bool switch_to_previous_round();
 
+    // Related with players
     PlayerType black_player_type() const
-        {return black_players[current_round_index]->player_type();}
+        {return black_players[current]->player_type();}
     PlayerType white_player_type() const
-        {return white_players[current_round_index]->player_type();}
+        {return white_players[current]->player_type();}
     void exchange_player();
     
-    unsigned board_width() const {return boards[current_round_index]->n_col();}
-    unsigned board_height() const {return boards[current_round_index]->n_row();}
+    // Related with the board
+    unsigned board_width() const {return boards[current]->n_col();}
+    unsigned board_height() const {return boards[current]->n_row();}
     PosStatus pos_status(unsigned x, unsigned y) const
-        {return boards[current_round_index]->get_status(x, y);}
-    bool undo() const {return boards[current_round_index]->undo();}
+        {return boards[current]->get_status(x, y);}
+    bool undo() const {return boards[current]->undo();}
 
-    GameStatus current_status() const {return game_statuses[current_round_index];}
+    GameStatus current_status() const {return game_statuses[current];}
 
+    // Handle input
     bool input(unsigned x, unsigned y);
     friend class GameFactory;
+    
+    // Procedual control
+    void next();
 private:
     // Private constructor to prevent the object created out of the factory.
     Game() {}
-    InputStatus input_status;
+    bool input_locked;
     // The current_index is the index of the subgame that allows both the
     // input and output.
-    unsigned current_round_index;
+    unsigned current;
     // Number of subgames
     unsigned rounds;
     // List of the game status

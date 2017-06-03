@@ -38,6 +38,8 @@ public:
     void set_remove_candidates(const std::vector<Te>& _remove_candidates)
         {remove_candidates = _remove_candidates;}
     virtual bool remove();
+    // Return true for willing to exchange.
+    virtual bool exchange_choice() {return false}
 protected:
     Board *board;
     bool stone_color;
