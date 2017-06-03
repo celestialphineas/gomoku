@@ -20,6 +20,7 @@ public:
     GameOrganizer(Board *_board = NULL, WinningJudge *_judge = NULL,
         Player *_black = NULL, Player *_white = NULL);
     virtual ~GameOrganizer() {return;}
+    virtual GameOrganizer* clone() const = 0;
     // The exchange_player method exchanges the pointers "black_player" and 
     // "white_player", if no NULL occurs, the method also let the players change
     // the stones that they are playing.

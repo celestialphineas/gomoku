@@ -17,6 +17,7 @@ public:
     StdOrganizer(const GameOrganizer &src): GameOrganizer(src) {}
     // Destructor
     ~StdOrganizer() {return;}
+    GameOrganizer *clone() const {return new StdOrganizer(*this);}
     void next();
 };
 

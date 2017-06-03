@@ -24,35 +24,42 @@ public:
     // Outputs
     unsigned n_rounds() const {return n_rounds;}
     // The return value starts from 1
-    unsigned current_subgame_index() const {return observing_index + 1;}
+    unsigned current_round() const {return current_round_index + 1;}
+    bool switch_to_round(unsigned round_index);    
+    bool next_round_validity() const;
+    bool previous_round_validity() const;
+    bool switch_to_next_round();
+    bool switch_to_previous_round();
 
     PlayerType black_player_type() const
-        {return black_players[current_round]->player_type();}
+        {return black_players[current_round_index]->player_type();}
     PlayerType white_player_type() const
-        {return white_players[current_round]->player_type();}
+        {return white_players[current_round_index]->player_type();}
     
-    unsigned board_width() const {return boards[current_round]->n_col();}
-    unsigned board_height() const {return boards[current_round]->n_row();}
+    unsigned board_width() const {return boards[current_round_index]->n_col();}
+    unsigned board_height() const {return boards[current_round_index]->n_row();}
     PosStatus pos_status(unsigned x, unsigned y) const
-        {return boards[current_round]->get_status(x, y);}
+        {return boards[current_round_index]->get_status(x, y);}
 
-    GameStatus
+    GameStatus current_status() const {return game_statuses[current_round_index];}
 
     bool input(unsigned x, unsigned y);
-    friend GameFactory;
+    friend class GameFactory;
 private:
-    bool input_lock;
+    // Private constructor to prevent the object created out of the factory.
+    Game() {}
+    InputStatus input_status;
     // The current_index is the index of the subgame that allows both the
     // input and output.
-    unsigned current_round;
+    unsigned current_round_index;
     // Number of subgames
     unsigned rounds;
     // List of the game status
-    unsigned game_status[];
-    Player* white_players[];
-    Player* black_players[];
-    WinningJudge* judges[];
+    GameStatus game_statuses[];
     Board* boards[];
+    WinningJudge* judges[];
+    Player* black_players[];
+    Player* white_players[];
     GameOrganizer* organizers[];
 };
 
