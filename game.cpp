@@ -85,3 +85,11 @@ bool Game::switch_to_previous_round()
     if(previous_round_validity()) {current_round_index--; return true;}
     else return false;
 }
+
+void Game::exchange_player()
+{
+    Player *temp = black_players[current_round_index];
+    black_players[current_round_index] = white_players[current_round_index];
+    white_players[current_round_index] = temp;
+    game_organizer[current_round_index]->exchange_player();
+}

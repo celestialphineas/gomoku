@@ -1,6 +1,10 @@
 #ifndef __GAME_H
 #define __GAME_H
 
+#include "board.h"
+#include "winning_judge.h"
+#include "player.h"
+
 class Game
 {
 public:
@@ -41,11 +45,13 @@ public:
         {return black_players[current_round_index]->player_type();}
     PlayerType white_player_type() const
         {return white_players[current_round_index]->player_type();}
+    void exchange_player();
     
     unsigned board_width() const {return boards[current_round_index]->n_col();}
     unsigned board_height() const {return boards[current_round_index]->n_row();}
     PosStatus pos_status(unsigned x, unsigned y) const
         {return boards[current_round_index]->get_status(x, y);}
+    bool undo() const {return boards[current_round_index]->undo();}
 
     GameStatus current_status() const {return game_statuses[current_round_index];}
 
