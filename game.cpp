@@ -165,19 +165,65 @@ void Game::next()
     organizers[current]->next();
     GameOrganizer::CurrentRequest new_request
         = organizers[current]->current_request();
-    if((new_request == black_te || new_request == black_remove
-        || new_request == black_exchange)
+    if((new_request == GameOrganizer::black_te
+        || new_request == GameOrganizer::black_remove
+        || new_request == GameOrganizer::black_exchange)
         && black_players[current]->player_type == human_player)
 
     {
         input_locked = false;
         return;
     }
-    else if((new_request == white_te || new_request == white_remove
-        || new_request == white_exchange)
+    else if((new_request == GameOrganizer::white_te
+        || new_request == GameOrganizer::white_remove
+        || new_request == GameOrganizer::white_exchange)
         && white_players[current]->player_type == human_player)
     {
         input_locked = false;
         return;
     }
+}
+
+bool Game::input(unsigned x, unsigned y)
+{
+    if(input_locked) return false;
+
+    GameOrganizer::CurrentRequest request
+        = organizers[current]->current_request();
+    switch(request)
+    {
+        case GameOrganizer::black_te :
+        case GameOrganizer::black_remove :
+            bool result = black_players[current]->input(x, y);
+            if(result) input_locked = true;
+            return result;
+        case GameOrganizer::white_te :
+        case GameOrganizer::white_remove :
+            bool result = white_players[current]->input(x, y);
+            if(result) input_locked = true;
+            return result;
+        default: break;
+    }
+    return false;
+}
+
+bool Game::input(bool _exchange_choice)
+{
+    if(input_locked) return false;
+
+    GameOrganizer::CurrentRequest request
+        = organizers[current]->current_request();
+    switch(request)
+    {
+        case GameOrganizer::black_exchange :
+            bool result = black_players[current]->input(_exchange_choice);
+            if(result) input_locked = true;
+            return result;
+        case GameOrganizer::white_exchange :
+            bool result = white_players[current]->input(_exchange_choice);
+            if(result) input_locked = true;
+            return result;
+        default: break;
+    }
+    return false;
 }

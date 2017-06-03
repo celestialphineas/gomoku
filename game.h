@@ -53,6 +53,7 @@ public:
 
     // Handle input
     bool input(unsigned x, unsigned y);
+    bool input(bool _exchange_choice);
     friend class GameFactory;
     
     // Procedual control

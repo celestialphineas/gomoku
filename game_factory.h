@@ -7,7 +7,6 @@
 class GameFactory
 {
 public:
-    
 };
 
 #endif
