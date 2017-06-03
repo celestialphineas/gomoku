@@ -251,5 +251,6 @@ bool PrimaryAI::remove()
     else board->white_remove(max_it->x(), max_it->y());
 
     delete temp_judge;
+    remove_candidates.erase(remove_candidates.begin(), remove_candidates.end());
     return true;
 }

@@ -28,7 +28,6 @@ public:
     Game(const Game&);
     ~Game();
 
-    // Outputs
     unsigned n_rounds() const {return n_rounds;}
     // The return value starts from 1
     unsigned current_round() const {return current_round_index + 1;}

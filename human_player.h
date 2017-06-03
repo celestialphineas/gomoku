@@ -1,3 +1,6 @@
+#ifndef __HUMAN_PLAYER_H_
+#define __HUMAN_PLAYER_H_
+
 #include "player.h"
 
 class HumanPlayer: public Player
@@ -19,3 +22,5 @@ private:
     bool there_is_something_in;
     unsigned x_buf; unsigned y_buf;
 };
+
+#endif
