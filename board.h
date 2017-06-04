@@ -23,7 +23,7 @@ public:
     static const CurrentWinLoss black_wins = 1;
     static const CurrentWinLoss white_wins = 2;
     // Rule of three
-    Board(unsigned _n_rows = 19, unsigned _n_cols = 19);
+    Board(unsigned _n_rows = 15, unsigned _n_cols = 15);
     ~Board();
     Board(const Board&);
 

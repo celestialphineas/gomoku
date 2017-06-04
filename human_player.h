@@ -6,7 +6,7 @@
 class HumanPlayer: public Player
 {
 public:
-    HumanPlayer(Board *_board, bool _stone, WinningJudge *_judge)
+    HumanPlayer(Board *_board, bool _stone)
         : Player(_board, _stone)
     {
         there_is_something_in = false;
