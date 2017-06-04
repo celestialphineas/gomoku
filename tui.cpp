@@ -1,7 +1,7 @@
 #include "game_factory.h"
 #include <iostream>
 
-void TUI_game_settings(
+bool TUI_game_settings(
     unsigned &n_rounds,
     GameFactory::PlayerType &player1,
     GameFactory::PlayerType &player2,
@@ -30,8 +30,9 @@ int main(void)
         game_judge = GameFactory::standard_gomoku;
         board_dim_width = 15;
         board_dim_height = 15;
-        TUI_game_settings(n_rounds, player1, player2, game_rule, game_judge,
-            board_dim_width, board_dim_height);
+        if(!TUI_game_settings(n_rounds, player1, player2, game_rule, game_judge,
+            board_dim_width, board_dim_height))
+                return 0;
         Game *new_game = game_factory.create_game(
             n_rounds, player1, player2, game_rule, game_judge, board_dim_width,
             board_dim_height);
@@ -46,7 +47,7 @@ int main(void)
     return 0;
 }
 
-void TUI_game_settings(
+bool TUI_game_settings(
     unsigned &n_rounds,
     GameFactory::PlayerType &player1,
     GameFactory::PlayerType &player2,
@@ -67,6 +68,7 @@ Game Settings\n\
 5. Set winning judge\n\
 6. Set the board dimension\n\
 7. Start game!\n\
+8. Exit\n\
 > ");
     std::cin >> choice;
     system("cls");
@@ -130,11 +132,13 @@ Game Settings\n\
             std::cin >> board_dim_height;
             goto settings;
         case 7:
-            return;
+            return true;
+        case 8:
+            return false;
         default:
             goto settings;
     }
-    return;
+    return true;
 }
 
 void print_game(Game *game)
