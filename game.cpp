@@ -56,7 +56,7 @@ bool Game::switch_to_round(unsigned round_index)
 
 bool Game::next_round_validity() const
 {
-    if(current >= rounds) return false; 
+    if(current + 1 >= rounds) return false; 
     unsigned n_black_wins = 0, n_white_wins = 0;
     for(unsigned i = 0; i < current; i++)
     {

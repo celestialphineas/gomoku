@@ -51,6 +51,7 @@ public:
         {return boards[current]->get_status(x, y);}
     bool undo() const {return boards[current]->undo();}
 
+    bool input_allowed() const {return !input_locked;}
     GameStatus current_status() const {return game_statuses[current];}
 
     // Handle input
