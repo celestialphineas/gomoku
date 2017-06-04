@@ -3,11 +3,6 @@
 #define __GAME_FACTORY_H_
 
 #include "game.h"
-#include "human_player.h"
-#include "primary_ai.h"
-#include "std_organizer.h"
-#include "std_gomoku_judge.h"
-#include "free_style_judge.h"
 
 class GameFactory
 {

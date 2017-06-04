@@ -170,11 +170,11 @@ void print_game(Game *game)
             switch(game->pos_status(i, j))
             {
                 case Game::accessible:
-                    printf(" \33[32m+\033[0m "); break;
+                    printf(" + "); break;
                 case Game::black_stone:
-                    printf(" \33[30mo\033[0m "); break;
+                    printf(" x "); break;
                 case Game::white_stone:
-                    printf(" \33[37mo\033[0m "); break;
+                    printf(" o "); break;
                 default:
                     printf("   "); break;
             }

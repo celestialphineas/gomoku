@@ -4,7 +4,7 @@
 #ifndef __STD_ORGANIZER_H_
 #define __STD_ORGANIZER_H_
 
-#include "game_organizer.h"
+#include "../game_organizer.h"
 
 class StdOrganizer: public GameOrganizer
 {

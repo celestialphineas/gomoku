@@ -2,9 +2,9 @@
 #ifndef __GAME_ORGANIZER_H_
 #define __GAME_ORGANIZER_H_
 
+#include <cstdlib>
 #include "board.h"
 #include "player.h"
-#include "free_style_judge.h"
 
 // Game organizer abstract interface
 class GameOrganizer

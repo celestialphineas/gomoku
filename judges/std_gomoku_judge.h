@@ -1,7 +1,8 @@
 #ifndef __STD_GOMOKU_JUDGE_
 #define __STD_GOMOKU_JUDGE_
 
-#include "winning_judge.h"
+#include "../winning_judge.h"
+
 class StandardGomokuJudge: public WinningJudge
 {
 public:

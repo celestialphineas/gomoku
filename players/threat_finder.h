@@ -1,8 +1,9 @@
 #ifndef __THREAT_FINDER_H_
 #define __THREAT_FINDER_H_
 
-#include "board.h"
+#include <cstdlib>
 #include <vector>
+#include "../board.h"
 
 // The threat finder is used to find threats on a board. The threat finder
 // returns a list of Threat class instances to mark the threats and indicate the

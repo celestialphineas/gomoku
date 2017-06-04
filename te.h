@@ -5,8 +5,6 @@
 #ifndef __TE_H_
 #define __TE_H_
 
-#include <iostream>
-
 class Te
 {
 public:

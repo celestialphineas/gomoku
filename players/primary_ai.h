@@ -3,9 +3,9 @@
 
 #include <ctime>
 #include <cstdlib>
-#include "player.h"
+#include "../player.h"
+#include "../winning_judge.h"
 #include "threat_finder.h"
-#include "winning_judge.h"
 
 class PrimaryAI: public AIPlayer
 {

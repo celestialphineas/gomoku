@@ -4,8 +4,11 @@
 #include "board.h"
 #include "winning_judge.h"
 #include "player.h"
-#include "game_organizer.h"
-#include "human_player.h"
+#include "players/human_player.h"
+#include "players/primary_ai.h"
+#include "organizers/std_organizer.h"
+#include "judges/std_gomoku_judge.h"
+#include "judges/free_style_judge.h"
 
 class Game
 {
