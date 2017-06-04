@@ -40,16 +40,17 @@ bool HumanPlayer::te()
     if(!there_is_something_in) return false;
     if(stone_color == black)
     {
-        result = board->black_te(x_buf, y_buf);
+        bool result = board->black_te(x_buf, y_buf);
         there_is_something_in = false;
         return result;
     }
     else
     {
-        result = board->white_te(x_buf, y_buf);
+        bool result = board->white_te(x_buf, y_buf);
         there_is_something_in = false;
         return result;
     }
+    return false;
 }
 
 bool HumanPlayer::remove()
@@ -57,14 +58,15 @@ bool HumanPlayer::remove()
     if(!there_is_something_in) return false;
     if(stone_color == black)
     {
-        result = board->black_remove(x_buf, y_buf);
+        bool result = board->black_remove(x_buf, y_buf);
         there_is_something_in = false;
         return result;
     }
     else
     {
-        result = board->white_remove(x_buf, y_buf);
+        bool result = board->white_remove(x_buf, y_buf);
         there_is_something_in = false;
         return result;
     }
+    return false;
 }

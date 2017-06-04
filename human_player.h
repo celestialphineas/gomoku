@@ -21,8 +21,8 @@ public:
     bool input(bool _exchange_choice);
     bool got_input() const {return there_is_something_in;}
     bool te();
-    bool remove(const std::vector<Te> te_candidates);
-    bool exchange_choice() {return exchange_choice_buf};
+    bool remove();
+    bool exchange_choice() {return exchange_choice_buf;};
 private:
     bool there_is_something_in;
     unsigned x_buf; unsigned y_buf;

@@ -2,14 +2,14 @@
 
 Game::Game(const Game& src)
 {
-    input_status = src.input_status;
+    input_locked = src.input_locked;
     current = src.current;
     rounds = src.rounds;
     game_statuses = new GameStatus[rounds];
     white_players = new Player*[rounds];
     black_players = new Player*[rounds];
     judges = new WinningJudge*[rounds];
-    boards = new Boards*[rounds];
+    boards = new Board*[rounds];
     organizers = new GameOrganizer*[rounds];
     for(unsigned i = 0; i < rounds; i++)
     {
@@ -21,10 +21,10 @@ Game::Game(const Game& src)
         white_players[i] = src.white_players[i]->clone();
         black_players[i]->set_board(boards[i]);
         white_players[i]->set_board(boards[i]);
-        if(black_players[i]->player_type == Player::human_player)
-            dynamic_cast<AIPlayer*>(black_player[i])->set_judge(judges[i]);
-        if(white_players[i]->player_type == Player::ai_player)
-            dynamic_cast<AIPlayer*>(white_player[i])->set_judge(judges[i]);
+        if(black_players[i]->player_type() == Player::human_player)
+            dynamic_cast<AIPlayer*>(black_players[i])->set_judge(judges[i]);
+        if(white_players[i]->player_type() == Player::ai_player)
+            dynamic_cast<AIPlayer*>(white_players[i])->set_judge(judges[i]);
         organizers[i] = src.organizers[i]->clone();
         organizers[i]->set_board(boards[i]);
         organizers[i]->set_judge(judges[i]);
@@ -91,7 +91,7 @@ void Game::exchange_player()
     Player *temp = black_players[current];
     black_players[current] = white_players[current];
     white_players[current] = temp;
-    game_organizer[current]->exchange_player();
+    organizers[current]->exchange_player();
     return;
 }
 
@@ -106,12 +106,12 @@ void Game::next()
         if((request == GameOrganizer::black_te
             || request == GameOrganizer::black_remove
             || request == GameOrganizer::black_exchange)
-            && black_players[current] == Player::human_player)
+            && black_players[current]->player_type() == Player::human_player)
                 input_locked = false;
         if((request == GameOrganizer::white_te
             || request == GameOrganizer::white_remove
             || request == GameOrganizer::white_exchange)
-            && white_players[current] == Player::human_player)
+            && white_players[current]->player_type() == Player::human_player)
                 input_locked = false;
         game_statuses[current] = judges[current]->judge();
         if(game_statuses[current] != ongoing) input_locked = true;
@@ -168,7 +168,7 @@ void Game::next()
     if((new_request == GameOrganizer::black_te
         || new_request == GameOrganizer::black_remove
         || new_request == GameOrganizer::black_exchange)
-        && black_players[current]->player_type == human_player)
+        && black_players[current]->player_type() == human_player)
 
     {
         input_locked = false;
@@ -177,7 +177,7 @@ void Game::next()
     else if((new_request == GameOrganizer::white_te
         || new_request == GameOrganizer::white_remove
         || new_request == GameOrganizer::white_exchange)
-        && white_players[current]->player_type == human_player)
+        && white_players[current]->player_type() == human_player)
     {
         input_locked = false;
         return;
@@ -190,16 +190,17 @@ bool Game::input(unsigned x, unsigned y)
 
     GameOrganizer::CurrentRequest request
         = organizers[current]->current_request();
+    bool result;
     switch(request)
     {
         case GameOrganizer::black_te :
         case GameOrganizer::black_remove :
-            bool result = black_players[current]->input(x, y);
+            result = dynamic_cast<HumanPlayer*>(black_players[current])->input(x, y);
             if(result) input_locked = true;
             return result;
         case GameOrganizer::white_te :
         case GameOrganizer::white_remove :
-            bool result = white_players[current]->input(x, y);
+            result = dynamic_cast<HumanPlayer*>(white_players[current])->input(x, y);
             if(result) input_locked = true;
             return result;
         default: break;
@@ -213,14 +214,19 @@ bool Game::input(bool _exchange_choice)
 
     GameOrganizer::CurrentRequest request
         = organizers[current]->current_request();
+    bool result;
     switch(request)
     {
         case GameOrganizer::black_exchange :
-            bool result = black_players[current]->input(_exchange_choice);
+            result
+                = dynamic_cast<HumanPlayer*>(black_players[current])
+                    ->input(_exchange_choice);
             if(result) input_locked = true;
             return result;
         case GameOrganizer::white_exchange :
-            bool result = white_players[current]->input(_exchange_choice);
+            result
+                = dynamic_cast<HumanPlayer*>(white_players[current])
+                    ->input(_exchange_choice);
             if(result) input_locked = true;
             return result;
         default: break;

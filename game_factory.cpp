@@ -14,7 +14,7 @@ Game* GameFactory::create_game(
         return NULL; 
     if(width < min_board_dim_width_threshold) return NULL;
     if(height < min_board_dim_height_threshold) return NULL;
-    if(width > max_baord_dim_width_threshold) return NULL;
+    if(width > max_board_dim_width_threshold) return NULL;
     if(height > max_board_dim_height_threshold) return NULL;
 
     Game *new_game = new Game;
@@ -25,7 +25,7 @@ Game* GameFactory::create_game(
     new_game->white_players = new Player*[n_rounds];
     new_game->black_players = new Player*[n_rounds];
     new_game->judges = new WinningJudge*[n_rounds];
-    new_game->boards = new Boards*[n_rounds];
+    new_game->boards = new Board*[n_rounds];
     new_game->organizers = new GameOrganizer*[n_rounds];
 
     for(unsigned i = 0; i < n_rounds; i++)
@@ -81,7 +81,7 @@ Game* GameFactory::create_game(
                         Player::white, new_game->judges[i]);
                 break;
         }
-        switch(GameRule)
+        switch(game_rule)
         {
             case standard_rule:
                 new_game->organizers[i]

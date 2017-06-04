@@ -4,6 +4,8 @@
 #include "board.h"
 #include "winning_judge.h"
 #include "player.h"
+#include "game_organizer.h"
+#include "human_player.h"
 
 class Game
 {
@@ -26,7 +28,7 @@ public:
     ~Game();
 
     // Related with rounds
-    unsigned n_rounds() const {return n_rounds;}
+    unsigned n_rounds() const {return rounds;}
     // The return value starts from 1
     unsigned current_round() const {return current + 1;}
     bool switch_to_round(unsigned round_index);    
@@ -68,12 +70,12 @@ private:
     // Number of subgames
     unsigned rounds;
     // List of the game status
-    GameStatus game_statuses[];
-    Board* boards[];
-    WinningJudge* judges[];
-    Player* black_players[];
-    Player* white_players[];
-    GameOrganizer* organizers[];
+    GameStatus *game_statuses;
+    Board* *boards;
+    WinningJudge* *judges;
+    Player* *black_players;
+    Player* *white_players;
+    GameOrganizer* *organizers;
 };
 
 #endif
