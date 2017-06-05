@@ -70,7 +70,7 @@ bool Game::next_round_validity() const
 
 bool Game::previous_round_validity() const
 {
-    if(current <= 1) return false;
+    if(current <= 0) return false;
     return true;
 }
 
