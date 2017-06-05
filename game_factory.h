@@ -10,7 +10,7 @@ public:
     enum PlayerType {human_player, primary_ai};
     enum GameRule {standard_rule};
     enum GameJudge {free_style_gomoku, standard_gomoku};
-    Game *create_game(
+    static Game *create_game(
         unsigned n_rounds = 1,
         PlayerType player1 = human_player,
         PlayerType player2 = primary_ai,
