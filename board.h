@@ -26,6 +26,7 @@ public:
     Board(unsigned _n_rows = 15, unsigned _n_cols = 15);
     ~Board();
     Board(const Board&);
+    Board &operator=(const Board &src) {return *(new Board(src));}
 
     struct SelectedRow
     {
