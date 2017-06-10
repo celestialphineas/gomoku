@@ -15,6 +15,8 @@ public:
     // Copy constructors
     StdOrganizer(const StdOrganizer &src): GameOrganizer(src) {}
     StdOrganizer(const GameOrganizer &src): GameOrganizer(src) {}
+    StdOrganizer &operator=(const StdOrganizer &src)
+        {return *(new StdOrganizer(src));}
     // Destructor
     ~StdOrganizer() {return;}
     GameOrganizer *clone() const {return new StdOrganizer(*this);}

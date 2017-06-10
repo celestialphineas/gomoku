@@ -13,6 +13,8 @@ public:
     PrimaryAI(Board *_board, bool _stone, WinningJudge *_judge)
         : AIPlayer(_board, _stone, _judge) {}
     PrimaryAI(const AIPlayer &src): AIPlayer(src) {}
+    PrimaryAI &operator=(const PrimaryAI &src)
+        {return *(new PrimaryAI(src));}
     Player *clone() const {return new PrimaryAI(*this);}
     bool te();
     bool remove();

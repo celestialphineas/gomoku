@@ -30,6 +30,8 @@ public:
     static const bool white = true;
     ThreatFinder(const Board *_board) {board = _board;}
     ThreatFinder(const ThreatFinder &src) {board = src.board;}
+    ThreatFinder &operator=(const ThreatFinder &src)
+        {return *(new ThreatFinder(src));}
     ~ThreatFinder() {return;}
     void set_board(Board *_board) {board = _board;}
     // This finds the straight in-row stones. 

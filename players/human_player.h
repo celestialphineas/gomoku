@@ -16,6 +16,8 @@ public:
         {there_is_something_in = src.there_is_something_in;}
     PlayerType player_type() const {return human_player;}
     Player *clone() const {return new HumanPlayer(*this);}
+    HumanPlayer &operator=(const HumanPlayer &src)
+        {return *(new HumanPlayer(src));}
     // Return false if the input is rejected.
     bool input(unsigned x, unsigned y);
     bool input(bool _exchange_choice);

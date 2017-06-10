@@ -25,6 +25,7 @@ public:
     ~Te() {};
     // Copy constructor
     Te(const Te &src);
+    Te &operator=(const Te &src){return *(new Te(src));}
     // 
     bool is_te() const {return te_status;}
     bool is_remove() const {return !te_status;}

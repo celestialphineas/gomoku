@@ -28,6 +28,7 @@ public:
     static const GameStatus not_started = 3;
 
     Game(const Game&);
+    Game &operator=(const Game &src) {return *(new Game(src));}
     ~Game();
 
     // Related with rounds
