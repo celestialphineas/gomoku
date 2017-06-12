@@ -9,6 +9,7 @@
 #include "organizers/std_organizer.h"
 #include "judges/std_gomoku_judge.h"
 #include "judges/free_style_judge.h"
+#include "judges/forbidden_judge.h"
 
 class Game
 {

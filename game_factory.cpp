@@ -42,6 +42,9 @@ Game* GameFactory::create_game(
                 new_game->judges[i]
                     = new StandardGomokuJudge(new_game->boards[i]);
                 break;
+            case renju:
+                new_game->judges[i]
+                    = new ForbiddenJudge(new_game->boards[i]);
             default:
                 new_game->judges[i]
                     = new StandardGomokuJudge(new_game->boards[i]);

@@ -9,7 +9,7 @@ class GameFactory
 public:
     enum PlayerType {human_player, primary_ai};
     enum GameRule {standard_rule};
-    enum GameJudge {free_style_gomoku, standard_gomoku};
+    enum GameJudge {free_style_gomoku, standard_gomoku, renju};
     static Game *create_game(
         unsigned n_rounds = 1,
         PlayerType player1 = human_player,
