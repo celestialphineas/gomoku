@@ -11,7 +11,7 @@
 
 #include "../winning_judge.h"
 
-//The class ForbiddenJudge inherit from the class WinningJudge.
+//The class ForbiddenJudge inherits from the class WinningJudge.
 class ForbiddenJudge: public WinningJudge
 {
 public:
