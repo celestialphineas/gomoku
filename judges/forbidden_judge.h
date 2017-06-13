@@ -11,6 +11,7 @@
 
 #include "../winning_judge.h"
 
+//The class ForbiddenJudge inherits from the class WinningJudge.
 class ForbiddenJudge: public WinningJudge
 {
 public:
@@ -21,6 +22,8 @@ public:
     WinningJudge *clone() const {return new ForbiddenJudge(*this);}
     
 private:
+    //Define a vector "forbidden_points" to store the forbidden points, which are from the previous chessboard
+    //and can help to check whether the recent moved black stone is put at the forbidden point.
     std::vector<std::vector<unsigned> > forbidden_points;
 };
 
