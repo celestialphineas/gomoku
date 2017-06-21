@@ -19,10 +19,10 @@ public:
         unsigned board_dim_width = 15,
         unsigned board_dim_height = 15);
     static const unsigned max_round_threshold = 50;
-    static const unsigned min_board_dim_width_threshold = 6;
-    static const unsigned min_board_dim_height_threshold = 6;
-    static const unsigned max_board_dim_width_threshold = 25;
-    static const unsigned max_board_dim_height_threshold = 25;
+    static const unsigned min_board_dim_width_threshold = 15;
+    static const unsigned min_board_dim_height_threshold = 15;
+    static const unsigned max_board_dim_width_threshold = 19;
+    static const unsigned max_board_dim_height_threshold = 19;
 };
 
 #endif

@@ -57,13 +57,21 @@ bool Game::switch_to_round(unsigned round_index)
 bool Game::next_round_validity() const
 {
     if(current + 1 >= rounds) return false; 
-    unsigned n_black_wins = 0, n_white_wins = 0;
-    for(unsigned i = 0; i < current; i++)
+    unsigned n_p1_wins = 0, n_p2_wins = 0;
+    for(unsigned i = 0; i <= current; i++)
     {
-        if(game_statuses[i] == black_wins) n_black_wins++;
-        else if(game_statuses[i] == white_wins) n_white_wins++;
+        if(i % 2)
+        {
+            if(game_statuses[i] == black_wins) n_p1_wins++;
+            else if(game_statuses[i] == white_wins) n_p2_wins++;
+        }
+        else
+        {
+            if(game_statuses[i] == black_wins) n_p2_wins++;
+            else if(game_statuses[i] == white_wins) n_p1_wins++;
+        }
     }
-    if(n_black_wins > (rounds + 1)/2 || n_white_wins > (rounds + 1)/2)
+    if(n_p1_wins >= (rounds + 1)/2 || n_p2_wins >= (rounds + 1)/2)
         return false;
     return true;
 }

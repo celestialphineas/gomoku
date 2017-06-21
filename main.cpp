@@ -10,9 +10,8 @@ int main(int argc, char *argv[])
 
     MainWindow w(new_game);
     SettingsDialog dialog(&w);
-
+    w.set_dialog(&dialog);
     w.show();
-    dialog.show();
-
     return a.exec();
 }
+

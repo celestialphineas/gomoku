@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QGridLayout>
 #include <QVBoxLayout>
+#include <QHBoxLayout>
 #include <QGroupBox>
 #include <QRadioButton>
 #include <QPushButton>
@@ -19,7 +20,8 @@ class SettingsDialog : public QWidget
 public:
     explicit SettingsDialog(MainWindow *main_window_, QWidget *parent = 0);
 public slots:
-
+    void create_game_object();
+    void toggle_this() {this->hide(); main_window->show();}
 private:
     QGridLayout layout;
 
@@ -37,6 +39,10 @@ private:
     QVBoxLayout board_setting_layout;
     QLabel width_label, height_label;
     QLineEdit width_edit, height_edit;
+
+    QGroupBox round_setting_group;
+    QVBoxLayout round_setting_layout;
+    QRadioButton round1, round5;
 
     QIntValidator width_validator;
     QIntValidator height_validator;

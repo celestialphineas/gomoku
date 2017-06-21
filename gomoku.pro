@@ -58,3 +58,6 @@ HEADERS  += mainwindow.h \
     settings_dialog.h
 
 FORMS    +=
+
+RESOURCES += \
+    resources.qrc

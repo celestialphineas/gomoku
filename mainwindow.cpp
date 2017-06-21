@@ -1,19 +1,42 @@
 #include "mainwindow.h"
 
 MainWindow::MainWindow(Game *game_, QWidget *parent):
-    QMainWindow(parent)
+    QMainWindow(parent),
+    board_color(180, 133, 87),
+    line_color(136, 76, 58),
+    black_stone_color(28, 28, 28),
+    white_stone_color(252, 250, 242),
+    invalid_but_color(line_color),
+    valid_but_color(black_stone_color),
+    thin_pen(line_color, pen_thin),
+    thick_pen(line_color, pen_thick),
+    black_stone_pen(Qt::transparent, pen_thin),
+    white_stone_pen(Qt::transparent, pen_thin),
+    black_text_pen(black_stone_color),
+    white_text_pen(white_stone_color),
+    invalid_but_pen(invalid_but_color),
+    valid_but_pen(valid_but_color),
+    default_brush(Qt::transparent),
+    black_stone_brush(black_stone_color),
+    white_stone_brush(white_stone_color),
+    stone_radius_ratio(0.4)
 {
     setMinimumSize(600, 600);
     setMaximumSize(600, 600);
 
-//    GameFactory game_factory;
-//    this->game = game_factory.create_game();
     this->game = game_;
     if(!game) exit(0);
 
     QPalette palette(this->palette());
-    palette.setColor(QPalette::Background, QColor(180, 133, 87));
+    palette.setColor(QPalette::Background, board_color);
     this->setPalette(palette);
+
+    if (QFontDatabase::addApplicationFont(":/fonts/fa.ttf") < 0)
+        qDebug("FontAwesome cannot be loaded!");
+    fa.setFamily("FontAwesome");
+    fa.setPixelSize(26);
+    minor.setFamily("Helvetica, Helvetica Neue, Arial");
+    minor.setPixelSize(20);
 }
 
 MainWindow::~MainWindow()
@@ -23,17 +46,6 @@ MainWindow::~MainWindow()
 
 void MainWindow::paintEvent(QPaintEvent *event)
 {
-    int pen_thin = 2, pen_thick = 4;
-    QColor line_color(136, 76, 58);
-    QPen thin_pen(line_color, pen_thin);
-    QPen thick_pen(line_color, pen_thick);
-    QPen black_stone_pen(QColor(28, 28, 28));
-    QPen white_stone_pen(QColor(252, 250, 242));
-    QBrush default_brush(Qt::transparent);
-    QBrush black_stone_brush(QColor(28, 28, 28));
-    QBrush white_stone_brush(QColor(252, 250, 242));
-    double stone_radius_ratio = 0.4;
-
     QPainter painter(this);
 
     painter.setPen(thin_pen);
@@ -41,9 +53,14 @@ void MainWindow::paintEvent(QPaintEvent *event)
     unsigned cols = game->board_width(), rows = game->board_height();
     grid_size = 600/((cols > rows ? cols : rows) - 1);
     unsigned stone_radius = stone_radius_ratio * grid_size;
-    setFixedSize(grid_size * (cols + 1), grid_size * (rows + 1));
+    unsigned window_width = grid_size * (cols + 1);
+    unsigned window_height = grid_size * (rows + 1.5);
+    setFixedSize(window_width, window_height + 20);
+
     // Antialiasing setting
     painter.setRenderHint(QPainter::Antialiasing);
+
+    // Draw the grid
     for(unsigned i = 0; i < cols; i++)
     {
         if(i == 0 || i == cols - 1)
@@ -62,6 +79,8 @@ void MainWindow::paintEvent(QPaintEvent *event)
         painter.drawLine(grid_size, (i + 1) * grid_size,
                          cols * grid_size, (i + 1) * grid_size);
     }
+
+    // Draw the stones
     for(unsigned i = 1; i <= rows; i++)
     for(unsigned j = 1; j <= cols; j++)
     {
@@ -78,6 +97,50 @@ void MainWindow::paintEvent(QPaintEvent *event)
             painter.drawEllipse(QPoint(i * grid_size, j * grid_size), stone_radius, stone_radius);
         }
     }
+
+    // Draw the symbols
+    // Go previous
+    fa.setPixelSize(grid_size);
+    painter.setFont(fa);
+    if(game->previous_round_validity()) painter.setPen(valid_but_pen);
+    else painter.setPen(invalid_but_pen);
+    painter.drawText(grid_size/2, window_height - grid_size, grid_size, grid_size, Qt::AlignCenter, QChar(0xf104));
+    // Current status
+    if(game->current_status() == Game::not_started)
+    {
+        painter.setPen(valid_but_pen);
+        painter.drawText(grid_size*3/2, window_height - grid_size, grid_size, grid_size, Qt::AlignCenter, QChar(0xf04b));
+    }
+    else if(game->current_status() == Game::ongoing)
+    {
+        painter.setPen(invalid_but_pen);
+        painter.drawText(grid_size*3/2, window_height - grid_size, grid_size, grid_size, Qt::AlignCenter, QChar(0xf111));
+    }
+    else if(game->current_status() == Game::black_wins)
+    {
+        painter.setPen(black_text_pen);
+        painter.drawText(grid_size*3/2, window_height - grid_size, grid_size, grid_size, Qt::AlignCenter, QChar(0xf111));
+    }
+    else if(game->current_status() == Game::white_wins)
+    {
+        painter.setPen(white_text_pen);
+        painter.drawText(grid_size*3/2, window_height - grid_size, grid_size, grid_size, Qt::AlignCenter, QChar(0xf111));
+    }
+    // Rounds
+    painter.setPen(invalid_but_pen);
+    painter.setFont(minor);
+    painter.drawText(grid_size*5/2, window_height - grid_size, grid_size, grid_size, Qt::AlignCenter, QString::number(game->current_round()) + "/" + QString::number(game->n_rounds()));
+    // Go next
+    painter.setFont(fa);
+    if(game->next_round_validity() &&
+            (game->current_status() == Game::black_wins
+          || game->current_status() == Game::white_wins))
+                painter.setPen(valid_but_pen);
+    else painter.setPen(invalid_but_pen);
+    painter.drawText(grid_size*7/2, window_height - grid_size, grid_size, grid_size, Qt::AlignCenter, QChar(0xf105));
+    // Settings
+    painter.setPen(valid_but_pen);
+    painter.drawText(window_width - grid_size*3/2, window_height - grid_size, grid_size, grid_size, Qt::AlignCenter, QChar(0xf142));
     return;
 }
 
@@ -89,11 +152,33 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
         QPoint mouse_point = mapFromGlobal(QCursor::pos());
         int mouse_x = (mouse_point.x() + grid_size/2)/grid_size;
         int mouse_y = game->board_height() - (mouse_point.y() - grid_size/2)/grid_size;
-        qDebug("x: %d, y: %d", mouse_x, mouse_y);
-        game->input(mouse_x, mouse_y);
-        game->next();
-        repaint();
-        game->next();
-        repaint();
+        qDebug("x: %d, y: %d, %u", mouse_x, mouse_y, game->input_allowed());
+        if(game->previous_round_validity()
+                && mouse_x == 1 && mouse_y == 0)
+        {
+            game->switch_to_previous_round();
+            repaint();
+        }
+        if(game->next_round_validity() &&
+                (game->current_status() == Game::black_wins
+              || game->current_status() == Game::white_wins)
+              && mouse_x == 4 && mouse_y == 0)
+        {
+            game->switch_to_next_round();
+            repaint();
+        }
+        if(mouse_x == game->board_width() && mouse_y == 0)
+        {
+            dialog->show();
+            hide();
+        }
+        if(game->current_status() == Game::ongoing)
+        {
+            game->input(mouse_x, mouse_y);
+            game->next();
+            repaint();
+            game->next();
+            repaint();
+        }
     }
 }

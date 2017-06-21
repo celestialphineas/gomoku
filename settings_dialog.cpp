@@ -17,6 +17,10 @@ SettingsDialog::SettingsDialog(MainWindow *main_window_, QWidget *parent) :
     width_label(tr("宽度")),
     height_label(tr("高度")),
 
+    round_setting_group(tr("局")),
+    round1(tr("一局定胜")),
+    round5(tr("五局三胜")),
+
     create_new_but(tr("创建新的游戏")),
     cancel_but(tr("取消")),
 
@@ -26,7 +30,7 @@ SettingsDialog::SettingsDialog(MainWindow *main_window_, QWidget *parent) :
                      GameFactory::max_board_dim_height_threshold)
 {
     main_window = main_window_;
-    setFixedSize(500, 200);
+    setFixedSize(450, 280);
     setLayout(&layout);
     // Player settings
     player_setting_layout.addWidget(&human_vs_ai);
@@ -53,8 +57,63 @@ SettingsDialog::SettingsDialog(MainWindow *main_window_, QWidget *parent) :
     height_edit.setValidator(&height_validator);
     board_setting_group.setLayout(&board_setting_layout);
     layout.addWidget(&board_setting_group, 0, 2);
+    // Round settings
+    round_setting_layout.addWidget(&round1);
+    round1.setChecked(true);
+    round_setting_layout.addWidget(&round5);
+    round_setting_group.setLayout(&round_setting_layout);
+    layout.addWidget(&round_setting_group, 1, 0, 2, 1);
     // Buttons
-    layout.addWidget(&create_new_but, 1, 0);
-    layout.addWidget(&cancel_but, 1, 1);
+    layout.addWidget(&create_new_but, 1, 2);
+    layout.addWidget(&cancel_but, 2, 2);
+    // Signal slot connection
+    connect(&create_new_but, SIGNAL(clicked()), SLOT(create_game_object()));
+    connect(&cancel_but, SIGNAL(clicked()), SLOT(toggle_this()));
+}
+
+void SettingsDialog::create_game_object()
+{
+    GameFactory::PlayerType player1_type;
+    GameFactory::PlayerType player2_type;
+    GameFactory::GameRule game_rule = GameFactory::standard_rule;
+    GameFactory::GameJudge game_judge;
+    unsigned to_set_width = width_edit.text().toUInt();
+    unsigned to_set_height = height_edit.text().toUInt();
+    unsigned to_set_n_round;
+    if(human_vs_ai.isChecked())
+    {
+        player1_type = GameFactory::human_player;
+        player2_type = GameFactory::primary_ai;
+    }
+    else if(ai_vs_human.isChecked())
+    {
+        player1_type = GameFactory::primary_ai;
+        player2_type = GameFactory::human_player;
+    }
+    else
+    {
+        player1_type = GameFactory::human_player;
+        player2_type = GameFactory::human_player;
+    }
+    if(free_style.isChecked())
+        game_judge = GameFactory::free_style_gomoku;
+    else if(std_gomoku.isChecked())
+        game_judge = GameFactory::standard_gomoku;
+    else
+        game_judge = GameFactory::renju;
+    if(round1.isChecked())
+        to_set_n_round = 1;
+    else
+        to_set_n_round = 5;
+    Game *new_game = GameFactory::create_game(to_set_n_round, player1_type, player2_type, game_rule, game_judge, to_set_width, to_set_height);
+    if(new_game)
+    {
+        Game *to_delete = main_window->get_game();
+        main_window->set_game(new_game);
+        delete to_delete;
+        main_window->update();
+        this->hide();
+        main_window->show();
+    }
 }
 
