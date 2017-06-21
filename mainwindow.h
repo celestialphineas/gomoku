@@ -2,21 +2,26 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-
-namespace Ui {
-class MainWindow;
-}
+#include <QPainter>
+#include <QMouseEvent>
+#include <QDebug>
+#include <string>
+#include "game.h"
+#include "game_factory.h"
 
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = 0);
+    explicit MainWindow(Game *game_, QWidget *parent = 0);
+    void set_game(Game *game_);
     ~MainWindow();
-
 private:
-    Ui::MainWindow *ui;
+    void paintEvent(QPaintEvent *event);
+    void mousePressEvent(QMouseEvent *event);
+    unsigned grid_size;
+    Game *game;
 };
 
 #endif // MAINWINDOW_H

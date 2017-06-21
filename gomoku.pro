@@ -36,7 +36,8 @@ SOURCES += main.cpp\
     game_factory.cpp \
     game_organizer.cpp \
     player.cpp \
-    te.cpp
+    te.cpp \
+    judges/forbidden_judge.cpp
 
 HEADERS  += mainwindow.h \
     judges/free_style_judge.h \
@@ -51,6 +52,7 @@ HEADERS  += mainwindow.h \
     game_organizer.h \
     player.h \
     te.h \
-    winning_judge.h
+    winning_judge.h \
+    judges/forbidden_judge.h
 
-FORMS    += mainwindow.ui
+FORMS    +=
