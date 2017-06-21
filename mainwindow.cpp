@@ -84,18 +84,17 @@ void MainWindow::paintEvent(QPaintEvent *event)
 
 void MainWindow::mousePressEvent(QMouseEvent *event)
 {
-    update();
-    game->next();
     if(event->button() == Qt::LeftButton)
     {
+        game->next();
         QPoint mouse_point = mapFromGlobal(QCursor::pos());
-        qDebug("x: %d, y: %d\n", int((mouse_point.x() + grid_size/2)/grid_size), int(game->board_height() - (mouse_point.y() - grid_size/2)/grid_size));
-        game->input((mouse_point.x() + grid_size/2)/grid_size,
-                    game->board_height() - (mouse_point.y() - grid_size/2)/grid_size);
+        int mouse_x = (mouse_point.x() + grid_size/2)/grid_size;
+        int mouse_y = game->board_height() - (mouse_point.y() - grid_size/2)/grid_size;
+        qDebug("x: %d, y: %d", mouse_x, mouse_y);
+        game->input(mouse_x, mouse_y);
+        game->next();
+        repaint();
+        game->next();
+        repaint();
     }
-    update();
-    game->next();
-    update();
-    game->next();
-    update();
 }
