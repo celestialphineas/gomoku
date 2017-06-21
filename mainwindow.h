@@ -4,7 +4,6 @@
 #include <QMainWindow>
 #include <QPainter>
 #include <QMouseEvent>
-#include <QDebug>
 #include <QFont>
 #include <QFontDatabase>
 #include <string>

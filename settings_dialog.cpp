@@ -29,6 +29,7 @@ SettingsDialog::SettingsDialog(MainWindow *main_window_, QWidget *parent) :
     height_validator(GameFactory::min_board_dim_height_threshold,
                      GameFactory::max_board_dim_height_threshold)
 {
+    setWindowIcon(QIcon(":/icons/icon.ico"));
     main_window = main_window_;
     setFixedSize(450, 280);
     setLayout(&layout);

@@ -2,4 +2,7 @@
     <qresource prefix="/fonts">
         <file alias="fa.ttf">res/fontawesome-webfont.ttf</file>
     </qresource>
+    <qresource prefix="/icons">
+        <file alias="icon.ico">res/icon.ico</file>
+    </qresource>
 </RCC>

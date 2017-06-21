@@ -31,8 +31,7 @@ MainWindow::MainWindow(Game *game_, QWidget *parent):
     palette.setColor(QPalette::Background, board_color);
     this->setPalette(palette);
 
-    if (QFontDatabase::addApplicationFont(":/fonts/fa.ttf") < 0)
-        qDebug("FontAwesome cannot be loaded!");
+    QFontDatabase::addApplicationFont(":/fonts/fa.ttf");
     fa.setFamily("FontAwesome");
     fa.setPixelSize(26);
     minor.setFamily("Helvetica, Helvetica Neue, Arial");
@@ -46,6 +45,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::paintEvent(QPaintEvent *event)
 {
+    setWindowIcon(QIcon(":/icons/icon.ico"));
     QPainter painter(this);
 
     painter.setPen(thin_pen);
@@ -152,7 +152,6 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
         QPoint mouse_point = mapFromGlobal(QCursor::pos());
         int mouse_x = (mouse_point.x() + grid_size/2)/grid_size;
         int mouse_y = game->board_height() - (mouse_point.y() - grid_size/2)/grid_size;
-        qDebug("x: %d, y: %d, %u", mouse_x, mouse_y, game->input_allowed());
         if(game->previous_round_validity()
                 && mouse_x == 1 && mouse_y == 0)
         {
