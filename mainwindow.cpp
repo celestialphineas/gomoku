@@ -41,8 +41,7 @@ void MainWindow::paintEvent(QPaintEvent *event)
     unsigned cols = game->board_width(), rows = game->board_height();
     grid_size = 600/((cols > rows ? cols : rows) - 1);
     unsigned stone_radius = stone_radius_ratio * grid_size;
-    setMinimumSize(grid_size * (cols + 1), grid_size * (rows + 1));
-    setMaximumSize(grid_size * (cols + 1), grid_size * (rows + 1));
+    setFixedSize(grid_size * (cols + 1), grid_size * (rows + 1));
     // Antialiasing setting
     painter.setRenderHint(QPainter::Antialiasing);
     for(unsigned i = 0; i < cols; i++)
