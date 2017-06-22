@@ -4,3 +4,10 @@
 *.o
 *.obj
 *.exe
+.gitignore
+.vscode
+cmake-build*
+build/
+*.autosave
+.idea
+CMakeLists.txt
