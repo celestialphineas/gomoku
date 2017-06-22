@@ -1,0 +1,6 @@
+.vscode
+*.usr
+*.user
+*.o
+*.obj
+*.exe
