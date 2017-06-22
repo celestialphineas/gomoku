@@ -61,3 +61,5 @@ FORMS    +=
 
 RESOURCES += \
     resources.qrc
+
+RC_ICONS = ./res/icon.ico
