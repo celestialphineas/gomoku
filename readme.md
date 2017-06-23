@@ -2,6 +2,10 @@
 
 This project implements a gomoku game (aka five-in-row), and serves as a homework project for object-oriented programming course of Zhejiang University.
 
+## Release download
+
+Check out [here](https://github.com/celestialphineas/gomoku/releases), for a compiled version of the project.
+
 ## Environment
 
 The project is built under:
