@@ -272,24 +272,25 @@ static int KeyPointForbiddenCheck(Board *board, unsigned x, unsigned y, int poin
 
 //Check every point of the present chessboard and store all of the forbidden points in the vector "forbidden_points".
 ForbiddenJudge::CurrentWinLoss ForbiddenJudge::judge()
-{
-    //Define coord to store the coordinates of the forbidden points.
-    std::vector<unsigned> coord;
-    
+{    
+    for(std::vector<std::vector<unsigned> >::iterator i = forbidden_points.begin();
+        i != forbidden_points.end(); i++)
+    {
+        if(board->get_status((*i)[0], (*i)[1]) == Board::black_stone)
+            return white_wins;
+    }
+
+    forbidden_points.clear();
+
     //Search every point on the chessboard by i and j.
     for(unsigned i = 1; i <= board->n_col(); i++)
     {
         for(unsigned j=1; j <= board->n_row(); j++)
         {
-            //Check whether the recent moved black stone is put at the forbidden point in the vector "forbidden_points",
-            //and if yes, the white wins.
-            if(board->get_status(coord[0], coord[1]) == Board::black_stone)
-                return white_wins;
-            //If not, the vector "forbidden_points" is updated and the game goes on.
+            std::vector<unsigned> coord;
+            coord.push_back(i); coord.push_back(j);
             if(ForbiddenCheck(board, i, j) == LONG_FORBIDDEN || ForbiddenCheck(board, i, j) == FOUR_FOUR_FORBIDDEN || ForbiddenCheck(board, i, j) == THREE_THREE_FORBIDDEN)
                 forbidden_points.push_back(coord);
-            else if(ForbiddenCheck(board, i, j) == NO_FORBIDDEN)
-                return ongoing;
         }
     }
     
