@@ -9,8 +9,11 @@ Check out [here](https://github.com/celestialphineas/gomoku/releases), for a com
 ## Environment
 
 The project is built under:
+
 Qt version 5.8.0 (MSVC 2015, 32 bit)
+
 Windows 10 Home 1703
+
 Also passed a build on MacOS X.
 
 ## Class Diagram
